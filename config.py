@@ -22,9 +22,11 @@ class Config():
         self.RUBIK_FONT = 'Rubik-Regular.ttf'
 
         self.HIGH_SCORE = 0
-        self.GAME_FONT = None
-        self.MAX_POWER = 4
-        self.DRAG = 0.013
+
+        # DISK PROPERTIES
+        self.MAX_POWER = 6
+        self.DRAG = 0.025
+        self.TURN = 0.004
 
         self.BLUE = (63,72,204)
         self.BLACK = (0,0,0)

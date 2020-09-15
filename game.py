@@ -51,9 +51,18 @@ def calc_power(point_a, point_b):
         power = config.MAX_POWER
     return power
 
+def vector_modifier(vectors):
+    sum_x = 0
+    sum_y = 0
+    for vector in vectors:
+        sum_x += vector[0]
+        sum_y += vector[1]
+    return (sum_x, sum_y)
+
 def play():
     running = True
     charging = False
+    turn = config.TURN
 
     while running == True:
         bacground.draw(screen)
@@ -75,6 +84,7 @@ def play():
             print(('x', disk.move_x(2)))
 
         if charging:
+            # POWER INDICATOR ANIMATION
             mouse_x, mouse_y = mouse.get_pos()
             power = calc_power(disk.rect.center, (mouse_x, mouse_y))
 
@@ -102,10 +112,13 @@ def play():
                 #     print( wraith.move_dist(config, -0.1) )
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                # START CHARGING FOR THROW
                 charging = True
 
             if event.type == pygame.MOUSEBUTTONUP:
+                # THROW HAPPENS WHEN MOUSE IS RELEACED
                 charging = False
+                turn = config.TURN
                 mouse_x, mouse_y = mouse.get_pos()
                 vector = game_objects.vector(disk.rect.center, (mouse_x, mouse_y))
                 throw(power, vector)
@@ -113,6 +126,9 @@ def play():
         disk.move_2d()
         if disk.v > 0:
             disk.v -= config.DRAG
+            mod_vector = vector_modifier(( disk.u_vect, (disk.u_vect[1] * turn, -disk.u_vect[0] * turn) ))
+            disk.u_vector(mod_vector)
+
         elif disk.v < 0:
             disk.speed(0)
 
