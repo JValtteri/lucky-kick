@@ -22,11 +22,21 @@ text_highscore = game_objects.Texts(config.RUBIK_FONT, 'Highscore: {}'.format(hi
 # DEFINE ACTORS
 bacground = game_objects.Object(config.BACKGROUND, expire=False, visible=True)
 bacground.scale(config.SCREEN_SIZE)
+track = game_objects.Object(config.TRACK_0, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2, expire=False, visible=True)
 disk = game_objects.Object(config.DISK, x=80, y=650, expire=False, visible=True, colorkey=config.BLUE)
+
 
 def throw(power, vector):
     disk.speed(power)
     disk.u_vector(vector)
+
+def calc_power(point_a, point_b):
+    dx = point_a[0] - point_b[0]
+    dy = point_a[1] - point_b[1]
+    power = ( (dx**2 + dy**2)**0.5 ) / 5
+    if power > config.MAX_POWER:
+        power = config.MAX_POWER
+    return power
 
 def play():
     running = True
@@ -67,13 +77,17 @@ def play():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = mouse.get_pos()
+                power = calc_power(disk.rect.center, (mouse_x, mouse_y))
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                mouse_x, mouse_y = mouse.get_pos()
                 vector = game_objects.vector(disk.rect.center, (mouse_x, mouse_y))
-                throw(20, vector)
+                throw(power, vector)
 
         disk.move_2d()
         if disk.v > 0:
-            disk.v -= 0.4
-        if disk.v < 0:
+            disk.v -= config.DRAG
+        elif disk.v < 0:
             disk.speed(0)
 
         display.update()
