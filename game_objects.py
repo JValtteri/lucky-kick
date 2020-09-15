@@ -18,9 +18,9 @@ class Object():
                 v = 0,
                 vect = (0,0),
                 path = 'assets',
-                expire = True,
+                expire = False,
                 time = -1,
-                visible = False,
+                visible = True,
                 colorkey = False
                 ):
 

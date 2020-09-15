@@ -16,13 +16,15 @@ class Config():
         self.BASKET = 'basket.png'
         self.DISK = 'disk.png'
         self.BLOB = 'blob.png'
+        self.P_SCALE = 'scale.png'
+        self.BAR = 'bar.png'
         self.SC_FONT = 'SourceCodePro-Light.ttf'
         self.RUBIK_FONT = 'Rubik-Regular.ttf'
 
         self.HIGH_SCORE = 0
         self.GAME_FONT = None
-        self.MAX_POWER = 8
-        self.DRAG = 0.1
+        self.MAX_POWER = 4
+        self.DRAG = 0.013
 
         self.BLUE = (63,72,204)
         self.BLACK = (0,0,0)
