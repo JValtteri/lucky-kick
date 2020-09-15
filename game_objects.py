@@ -78,6 +78,7 @@ class Object():
     def scale(self, scale):
         """resize image to scale = (x, y)"""
         self.image = pygame.transform.scale(self.asset, scale)
+        self.rect = self.image.get_rect(center = (self.x, self.y))
 
     def rotate(self, vect):
         """returns a surface rotated along vect"""

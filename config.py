@@ -21,8 +21,8 @@ class Config():
 
         self.HIGH_SCORE = 0
         self.GAME_FONT = None
-        self.MAX_POWER = 20
-        self.DRAG = 0.4
+        self.MAX_POWER = 8
+        self.DRAG = 0.1
 
         self.BLUE = (63,72,204)
         self.BLACK = (0,0,0)

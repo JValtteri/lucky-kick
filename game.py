@@ -2,6 +2,7 @@ import pygame
 from pygame import display, mouse
 import game_objects
 from config import Config, init_screen
+# from math import round
 
 config = Config()
 screen = init_screen(config)
@@ -20,11 +21,14 @@ button_fullscreen = game_objects.Texts(config.RUBIK_FONT, 'Fullscreen', 40, conf
 text_highscore = game_objects.Texts(config.RUBIK_FONT, 'Highscore: {}'.format(high_score), 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2,  70 ) )
 
 # DEFINE ACTORS
-bacground = game_objects.Object(config.BACKGROUND, expire=False, visible=True)
+bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2, expire=False, visible=True)
 bacground.scale(config.SCREEN_SIZE)
-track = game_objects.Object(config.TRACK_0, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2, expire=False, visible=True)
+track = game_objects.Object(config.TRACK_0, expire=False, visible=True)
+track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
+track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
 disk = game_objects.Object(config.DISK, x=80, y=650, expire=False, visible=True, colorkey=config.BLUE)
-
+disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
+disk.pos(396, 574)
 
 def throw(power, vector):
     disk.speed(power)
@@ -43,18 +47,19 @@ def play():
 
     while running == True:
         bacground.draw(screen)
+        track.draw(screen)
         disk.draw(screen)
 
         keys = pygame.key.get_pressed()  #checking pressed keys
         if keys[pygame.K_w]:
-            disk.move_y(-0.4)
+            print(('y', disk.move_y(-2)))
         elif keys[pygame.K_s]:
-            disk.move_y(0.4)
+            print(('y', disk.move_y(2)))
 
         if keys[pygame.K_a]:
-            disk.move_x(-0.4)
+            print(('x', disk.move_x(-2)))
         elif keys[pygame.K_d]:
-            disk.move_x(0.4)
+            print(('x', disk.move_x(2)))
 
         # EVENTS
         current_events = pygame.event.get()
