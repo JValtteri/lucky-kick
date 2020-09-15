@@ -18,6 +18,7 @@ class Config():
         self.BLOB = 'blob.png'
         self.P_SCALE = 'scale.png'
         self.BAR = 'bar.png'
+        self.TURN_INDICATOR = 'turn.png'
         self.SC_FONT = 'SourceCodePro-Light.ttf'
         self.RUBIK_FONT = 'Rubik-Regular.ttf'
 

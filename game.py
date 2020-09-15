@@ -39,6 +39,9 @@ power_bar = game_objects.Object(config.BAR)
 power_bar.scale((32,1))
 power_bar.rect.bottomright = (config.SCREEN_SIZE[0]-40, config.SCREEN_SIZE[1]-20)
 
+turn_indicator = game_objects.Object(config.TURN_INDICATOR, x=config.SCREEN_SIZE[0]-120, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
+turn_indicator.pos(config.SCREEN_SIZE[0]-120, config.SCREEN_SIZE[1]-60)
+
 def throw(power, vector):
     disk.speed(power)
     disk.u_vector(vector)
@@ -63,6 +66,7 @@ def play():
     running = True
     charging = False
     turn = config.TURN
+    init_turn = 0
 
     while running == True:
         bacground.draw(screen)
@@ -70,6 +74,8 @@ def play():
         disk.draw(screen)
         power_scale.draw(screen)
         power_bar.draw(screen)
+        turn_indicator.draw(screen)
+        turn_indicator.pos(config.SCREEN_SIZE[0]-120, config.SCREEN_SIZE[1]-60)
 
 
         keys = pygame.key.get_pressed()  #checking pressed keys
@@ -82,6 +88,13 @@ def play():
             print(('x', disk.move_x(-2)))
         elif keys[pygame.K_d]:
             print(('x', disk.move_x(2)))
+
+        if keys[pygame.K_RIGHT]:
+            init_turn -= config.TURN * 0.1
+            turn_indicator.rotate((-init_turn, -turn*2))
+        elif keys[pygame.K_LEFT]:
+            init_turn += config.TURN * 0.1
+            turn_indicator.rotate((-init_turn, -turn*2))
 
         if charging:
             # POWER INDICATOR ANIMATION
@@ -118,7 +131,7 @@ def play():
             if event.type == pygame.MOUSEBUTTONUP:
                 # THROW HAPPENS WHEN MOUSE IS RELEACED
                 charging = False
-                turn = config.TURN
+                turn = config.TURN + init_turn
                 mouse_x, mouse_y = mouse.get_pos()
                 vector = game_objects.vector(disk.rect.center, (mouse_x, mouse_y))
                 throw(power, vector)
@@ -128,9 +141,12 @@ def play():
             disk.v -= config.DRAG
             mod_vector = vector_modifier(( disk.u_vect, (disk.u_vect[1] * turn, -disk.u_vect[0] * turn) ))
             disk.u_vector(mod_vector)
+            turn += config.TURN * 0.01
 
         elif disk.v < 0:
             disk.speed(0)
+            init_turn = 0
+            turn_indicator.rotate((0,-1))
 
         display.update()
         clock.tick(60)
