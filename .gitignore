@@ -1,0 +1,7 @@
+__*
+*.code*
+*.vscode
+build/*
+*.spec
+high_score
+aird-venv/*
