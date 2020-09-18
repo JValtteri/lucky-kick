@@ -45,7 +45,6 @@ class Object():
         """set entity center to position (x, y)"""
         self.x = x
         self.y = y
-        print('x:{} y:{}'.format(x, y))
         self.rect.centerx = x
         self.rect.centery = y
 

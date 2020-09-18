@@ -14,6 +14,7 @@ clock = pygame.time.Clock()
 
 high_score = None
 
+# TEXTS
 button_start = game_objects.Texts(config.RUBIK_FONT, "START", 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] - 70) )
 button_exit = game_objects.Texts(config.RUBIK_FONT, "Exit", 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2 + 200, config.SCREEN_SIZE[1] - 70 ) )
 text_credits = game_objects.Texts(config.RUBIK_FONT, "JValtteri - 2020", 20, (205,205,205), (30, config.SCREEN_SIZE[1] - 30 ) )
@@ -23,24 +24,21 @@ text_highscore = game_objects.Texts(config.RUBIK_FONT, 'Highscore: {}'.format(hi
 # DEFINE ACTORS
 bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
 bacground.scale(config.SCREEN_SIZE)
-
 track = game_objects.Object(config.TRACK_0)
 track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
 track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
-
 disk = game_objects.Object(config.DISK, x=80, y=650, colorkey=config.BLUE)
 disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
 disk.pos(396, 574)
-
+basket = game_objects.Object(config.BASKET, x=858, y=180, colorkey=config.BLUE)
+basket.scale((64, 64))
 power_scale = game_objects.Object(config.P_SCALE, x=config.SCREEN_SIZE[0]-20, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
 power_scale.rect.bottomright = (config.SCREEN_SIZE[0]-20, config.SCREEN_SIZE[1]-20)
-
 power_bar = game_objects.Object(config.BAR)
 power_bar.scale((32,1))
 power_bar.rect.bottomright = (config.SCREEN_SIZE[0]-40, config.SCREEN_SIZE[1]-20)
 
 turn_indicator = game_objects.Object(config.TURN_INDICATOR, x=config.SCREEN_SIZE[0]-120, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
-turn_indicator.pos(config.SCREEN_SIZE[0]-120, config.SCREEN_SIZE[1]-60)
 
 def throw(power, vector):
     disk.speed(power)
@@ -62,20 +60,41 @@ def vector_modifier(vectors):
         sum_y += vector[1]
     return (sum_x, sum_y)
 
+def check_basket_collision(disk, basket):
+    scored = False
+    if disk.rect.collidepoint(basket):
+        scored = score()
+    return scored
+
+def score():
+    # play chink-sound
+    print("score")
+    disk.v = 0
+    return True
+
+# def check_tree_collision(bogeys, missiles):
+#     hits = 0
+#     for bogey in bogeys:
+#         for missile in missiles:
+#             if missile.rect.colliderect(bogey.rect) and missile.image is not images.splash_img:
+#                 splash_it(missile, bogey)
+#                 hits += 1
+#     return hits
+
 def play():
-    running = True
+    scored = False
     charging = False
     turn = config.TURN
     init_turn = 0
 
-    while running == True:
+    while scored == False:
         bacground.draw(screen)
         track.draw(screen)
         disk.draw(screen)
+        basket.draw(screen)
         power_scale.draw(screen)
         power_bar.draw(screen)
         turn_indicator.draw(screen)
-        turn_indicator.pos(config.SCREEN_SIZE[0]-120, config.SCREEN_SIZE[1]-60)
 
 
         keys = pygame.key.get_pressed()  #checking pressed keys
@@ -95,6 +114,9 @@ def play():
         elif keys[pygame.K_LEFT]:
             init_turn += config.TURN * 0.1
             turn_indicator.rotate((-init_turn, -turn*2))
+
+        scored = check_basket_collision(disk, (basket.x, basket.y))
+        # check_tree_collision()
 
         if charging:
             # POWER INDICATOR ANIMATION
@@ -117,12 +139,6 @@ def play():
                                 pygame.K_KP_ENTER
                                 ):
                     running = False
-
-                # if event.key == pygame.K_w:
-                #     print( wraith.move_dist(config, +0.1) )
-
-                # if event.key == pygame.K_s:
-                #     print( wraith.move_dist(config, -0.1) )
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # START CHARGING FOR THROW
