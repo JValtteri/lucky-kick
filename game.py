@@ -83,11 +83,12 @@ def score():
 
 def play():
     scored = False
+    running = True
     charging = False
     turn = config.TURN
     init_turn = 0
 
-    while scored == False:
+    while scored == False and running:
         bacground.draw(screen)
         track.draw(screen)
         disk.draw(screen)
@@ -131,7 +132,9 @@ def play():
         current_events = pygame.event.get()
         for event in current_events:
 
-            # KEYBOARD
+            if event.type == pygame.QUIT:
+                running = False
+
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_SPACE,
                                 pygame.K_ESCAPE,
@@ -154,7 +157,9 @@ def play():
 
         disk.move_2d()
         if disk.v > 0:
-            disk.v -= config.DRAG
+            if disk.v < 2:
+                disk.v -= config.DRAG * config.MAX_POWER
+            disk.v -= config.DRAG * disk.v
             mod_vector = vector_modifier(( disk.u_vect, (disk.u_vect[1] * turn, -disk.u_vect[0] * turn) ))
             disk.u_vector(mod_vector)
             turn += config.TURN * 0.01

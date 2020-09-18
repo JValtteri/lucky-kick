@@ -26,7 +26,7 @@ class Config():
 
         # DISK PROPERTIES
         self.MAX_POWER = 6
-        self.DRAG = 0.025
+        self.DRAG = 0.00417    # 0.025
         self.TURN = 0.004
 
         self.BLUE = (63,72,204)
