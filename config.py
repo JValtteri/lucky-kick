@@ -25,7 +25,7 @@ class Config():
         self.HIGH_SCORE = 0
 
         # DISK PROPERTIES
-        self.MAX_POWER = 6
+        self.MAX_POWER = 5
         self.DRAG = 0.00417    # 0.025
         self.TURN = 0.004
 

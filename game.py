@@ -2,7 +2,7 @@ import pygame
 from pygame import display, mouse
 import game_objects
 from config import Config, init_screen
-# from math import round
+import math
 
 config = Config()
 screen = init_screen(config)
@@ -87,12 +87,13 @@ def play():
     charging = False
     turn = config.TURN
     init_turn = 0
+    angle = 0
 
     while scored == False and running:
         bacground.draw(screen)
         track.draw(screen)
-        disk.draw(screen)
         basket.draw(screen)
+        disk.draw(screen)
         power_scale.draw(screen)
         power_bar.draw(screen)
         turn_indicator.draw(screen)
@@ -111,10 +112,15 @@ def play():
 
         if keys[pygame.K_RIGHT]:
             init_turn -= config.TURN * 0.1
-            turn_indicator.rotate((-init_turn, -turn*2))
+            angle = init_turn/config.TURN/0.1
+            print(angle)
+            turn_indicator.rotate((-math.tan(math.radians(angle)), -1 ))
+
         elif keys[pygame.K_LEFT]:
             init_turn += config.TURN * 0.1
-            turn_indicator.rotate((-init_turn, -turn*2))
+            angle = init_turn/config.TURN/0.1
+            turn_indicator.rotate((-math.tan(math.radians(angle)), -1 ))
+            print(angle)
 
         scored = check_basket_collision(disk, (basket.x, basket.y))
         # check_tree_collision()
