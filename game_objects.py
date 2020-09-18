@@ -192,15 +192,27 @@ class Texts():
     def __init__(self, font, message="[insert text]", size=40, color=(225,225,225), xy=(0, 0), path='assets' ):
         self.game_font = pygame.font.Font( os.path.join(path, font) , size)
         self.message = message
-        self.surface = self.game_font.render(self.message, True, color)
-        self.rect = self.get_rect(xy)
+        self.color = color
+        self.xy = xy
+        self.surface = self.update()
+        self.rect = self.get_rect()
 
-    def get_rect(self, xy):
-        rect = self.surface.get_rect(center = xy )
+    def get_rect(self):
+        rect = self.surface.get_rect(center = self.xy )
+        self.rect = rect
         return rect
 
     def draw(self, screen):
         screen.blit(self.surface, self.rect)
+
+    def update(self, message=None, color=None):
+        if message is not None:
+            self.message = message
+        if color is not None:
+            self.color = color
+        surface = self.game_font.render(self.message, True, self.color)
+        self.surface = surface
+        return surface
 
 
 def vector(end, start=(0, 0) ):
