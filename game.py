@@ -13,17 +13,13 @@ This is free software, and you are welcome to redistribute it
 config = Config()
 screen = init_screen(config)
 clock = pygame.time.Clock()
-# images = Images(config)
-
-# mode_surface = self.menu_font.render('{}'.format(mode), True, (225,225,225) )
-# mode_rect = mode_surface.get_rect(center = (config.SCREEN_SIZE[0] / 2,  config.SCREEN_SIZE[1] / 2 + 44 ) )
 
 high_score = None
 
 # TEXTS
 button_start = game_objects.Texts(config.RUBIK_FONT, "START", 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] - 70) )
 button_exit = game_objects.Texts(config.RUBIK_FONT, "Exit", 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2 + 200, config.SCREEN_SIZE[1] - 70 ) )
-text_credits = game_objects.Texts(config.RUBIK_FONT, "JValtteri - 2020", 20, (205,205,205), (30, config.SCREEN_SIZE[1] - 30 ) )
+text_credits = game_objects.Texts(config.RUBIK_FONT, "(c) 2020 JValtteri", 20, (205,205,205), (30, config.SCREEN_SIZE[1] - 30 ) )
 button_fullscreen = game_objects.Texts(config.RUBIK_FONT, 'Fullscreen', 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2,  config.SCREEN_SIZE[1] / 2 - 44 ) )
 text_highscore = game_objects.Texts(config.RUBIK_FONT, 'Highscore: {}'.format(high_score), 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2,  70 ) )
 text_score = game_objects.Texts(config.RUBIK_FONT, 'Score: X', 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2,  70 ) )
@@ -60,7 +56,7 @@ def throw_disk(power, vector):
 
 def throw(throw_number, power):
     throw_number += 1
-    text_score.update(message='Score: {}'.format(throw_number))
+    text_score.update(message='Throws: {}'.format(throw_number))
     text_score.get_rect()
     mouse_x, mouse_y = mouse.get_pos()
     vector = game_objects.vector(disk.rect.center, (mouse_x, mouse_y))
@@ -97,6 +93,16 @@ def check_basket_collision(disk, basket):
     if disk.rect.collidepoint(basket):
         scored = score()
     return scored
+
+def camera_move(dx=0, dy=0):
+    # BUILD A LIST OF ENTITIES TO MOVE
+    entities=[track, basket, disk]
+    for tree in trees:
+        entities.append(tree)
+    # MOVE ENTITIES
+    for entity in entities:
+        entity.move_x(-dx)
+        entity.move_y(-dy)
 
 def score():
     # play chink-sound
@@ -146,28 +152,31 @@ def play():
         turn_indicator.draw(screen)
         text_score.draw(screen)
 
-        keys = pygame.key.get_pressed()  #checking pressed keys
+        # CHECK PRESSED KEYS
+        keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
-            print(('y', disk.move_y(-2)))
+            camera_move(dy=-1)
         elif keys[pygame.K_s]:
-            print(('y', disk.move_y(2)))
+            camera_move(dy=1)
 
         if keys[pygame.K_a]:
-            print(('x', disk.move_x(-2)))
+            camera_move(dx=-1)
         elif keys[pygame.K_d]:
-            print(('x', disk.move_x(2)))
+            camera_move(dx=1)
 
         if keys[pygame.K_RIGHT]:
-            init_turn -= config.TURN * 0.1
-            angle = init_turn/config.TURN/0.1
-            print(angle)
-            turn_indicator.rotate((-math.tan(math.radians(angle)), -1 ))
+            if angle > -90:
+                init_turn -= config.TURN * 0.1
+                angle = init_turn/config.TURN/0.1
+                print(angle)
+                turn_indicator.rotate((-math.tan(math.radians(angle)), -1 ))
 
         elif keys[pygame.K_LEFT]:
-            init_turn += config.TURN * 0.1
-            angle = init_turn/config.TURN/0.1
-            turn_indicator.rotate((-math.tan(math.radians(angle)), -1 ))
-            print(angle)
+            if angle < 90:
+                init_turn += config.TURN * 0.1
+                angle = init_turn/config.TURN/0.1
+                turn_indicator.rotate((-math.tan(math.radians(angle)), -1 ))
+                print(angle)
 
         scored = check_basket_collision(disk, (basket.x, basket.y))
         collision_vector = check_tree_collision(disk, trees)
