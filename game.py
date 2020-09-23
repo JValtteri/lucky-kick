@@ -4,6 +4,12 @@ import game_objects
 from config import Config, init_screen
 import math
 
+print("""
+Lucky-Kick Disk Golf, Copyright (C) 2020 JValtteri
+Lucky-Kick comes with ABSOLUTELY NO WARRANTY; for details type check LICENSE file.
+This is free software, and you are welcome to redistribute it
+""")
+
 config = Config()
 screen = init_screen(config)
 clock = pygame.time.Clock()

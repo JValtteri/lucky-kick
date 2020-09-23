@@ -4,6 +4,9 @@ import random
 # import config
 import os
 
+# Lucky-Kick Disk Golf, Copyright (C) 2020 JValtteri
+# Lucky-Kick comes with ABSOLUTELY NO WARRANTY; for details type check LICENSE file.
+# This is free software, and you are welcome to redistribute it
 
 class Object():
     """
