@@ -16,6 +16,7 @@ class Config():
         self.BASKET = 'basket.png'
         self.DISK = 'disk.png'
         self.BLOB = 'blob.png'
+        self.TREE = 'tree.png'
         self.P_SCALE = 'scale.png'
         self.BAR = 'bar.png'
         self.TURN_INDICATOR = 'turn.png'

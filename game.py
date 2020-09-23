@@ -37,6 +37,8 @@ disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
 disk.pos(396, 574)
 basket = game_objects.Object(config.BASKET, x=858, y=180, colorkey=config.BLUE)
 basket.scale((64, 64))
+trees = []
+trees.append(game_objects.Object(config.TREE, x=500, y=400, colorkey=config.BLUE))
 #
 # UI objects
 power_scale = game_objects.Object(config.P_SCALE, x=config.SCREEN_SIZE[0]-20, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
@@ -96,14 +98,22 @@ def score():
     disk.v = 0
     return True
 
-# def check_tree_collision(bogeys, missiles):
-#     hits = 0
-#     for bogey in bogeys:
-#         for missile in missiles:
-#             if missile.rect.colliderect(bogey.rect) and missile.image is not images.splash_img:
-#                 splash_it(missile, bogey)
-#                 hits += 1
-#     return hits
+def check_tree_collision(disk, trees):
+    collision_vector = None
+    for tree in trees:
+        if disk.rect.collidepoint((tree.x, tree.y)):
+            collision_vector = game_objects.vector((tree.x, tree.y), (disk.x, disk.y))
+            break
+    return collision_vector
+
+def kick(disk, collision_vector):
+    vect_0 = disk.u_vect
+    vect_1 = collision_vector
+    angle_0 = math.degrees( math.atan(vect_0[0]/vect_0[1]) )
+    angle_1 = math.degrees( math.atan(vect_1[1]/-vect_1[0]) )
+    new_angle = 2 * angle_1 - angle_0
+    new_vect = (1, math.tan(new_angle))
+    return new_vect
 
 def play():
     scored = False
@@ -120,7 +130,11 @@ def play():
         bacground.draw(screen)
         track.draw(screen)
         basket.draw(screen)
+        for tree in trees:
+            tree.draw(screen)
         disk.draw(screen)
+        # for tree in trees:
+        #     tree.draw(screen)
         power_scale.draw(screen)
         power_bar.draw(screen)
         turn_indicator.draw(screen)
@@ -150,7 +164,10 @@ def play():
             print(angle)
 
         scored = check_basket_collision(disk, (basket.x, basket.y))
-        # check_tree_collision()
+        collision_vector = check_tree_collision(disk, trees)
+        if collision_vector is not None:
+            kick_vector = kick(disk, collision_vector)
+            disk.u_vector(kick_vector)
 
         if charging:
             # POWER INDICATOR ANIMATION
