@@ -3,6 +3,7 @@ from pygame import display, mouse
 import game_objects
 from config import Config, init_screen
 import math
+import os
 
 print("""
 Lucky-Kick Disk Golf, Copyright (C) 2020 JValtteri
@@ -30,18 +31,6 @@ text_score = game_objects.Texts(config.RUBIK_FONT, 'Score: X', 40, config.UI_WHI
 bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
 bacground.scale(config.SCREEN_SIZE)
 #
-# Track objects
-track = game_objects.Object(config.TRACK_0)
-track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
-track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
-disk = game_objects.Object(config.DISK, x=80, y=650, colorkey=config.BLUE)
-disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
-disk.pos(396, 574)
-basket = game_objects.Object(config.BASKET, x=858, y=180, colorkey=config.BLUE)
-basket.scale((64, 64))
-trees = []
-trees.append(game_objects.Object(config.TREE, x=500, y=400, colorkey=config.BLUE))
-#
 # UI objects
 power_scale = game_objects.Object(config.P_SCALE, x=config.SCREEN_SIZE[0]-20, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
 power_scale.rect.bottomright = (config.SCREEN_SIZE[0]-20, config.SCREEN_SIZE[1]-20)
@@ -49,6 +38,20 @@ power_bar = game_objects.Object(config.BAR)
 power_bar.scale((32,1))
 power_bar.rect.bottomright = (config.SCREEN_SIZE[0]-40, config.SCREEN_SIZE[1]-20)
 turn_indicator = game_objects.Object(config.TURN_INDICATOR, x=config.SCREEN_SIZE[0]-120, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
+
+def load_track(name="track_0", hole_number=0):
+    f = open( os.path.join(config.TRACK_PATH, name, "track") ,'r' )
+    holes = f.readlines()
+    hole = holes[hole_number].split(' ')
+    par = int(hole.pop(0))
+    track = [int(i) for i in hole.pop(0).split(':', 1)]
+    disk = [int(i) for i in hole.pop(0).split(':', 1)]
+    basket = [int(i) for i in hole.pop(0).split(':', 1)]
+    trees = []
+    f.close()
+    for _ in hole:
+        trees.append( [int(i) for i in hole.pop(0).split(':')] )
+    return par, track, disk, basket, trees
 
 def throw_disk(power, vector):
     disk.speed(power)
@@ -235,4 +238,20 @@ def play():
 
 
 if __name__ == "__main__":
+
+    par, track_xy, disk_xy, basket_xy, trees_xy = load_track(name="track_0", hole_number=0)
+    print("{}, {}, {}, {}, {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
+    #
+    # Track objects
+    track = game_objects.Object(config.TRACK_0, path=os.path.join(config.TRACK_PATH, "track_0"))
+    track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
+    track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+    disk = game_objects.Object(config.DISK, colorkey=config.BLUE)
+    disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
+    disk.pos(disk_xy[0], disk_xy[1])    #(396, 574)
+    basket = game_objects.Object(config.BASKET, x=basket_xy[0], y=basket_xy[0], colorkey=config.BLUE)
+    basket.scale((64, 64))
+    trees = []
+    trees.append(game_objects.Object(config.TREE, x=trees_xy[0][0], y=trees_xy[0][1], colorkey=config.BLUE))
+
     play()

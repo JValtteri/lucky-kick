@@ -14,6 +14,7 @@ class Config():
         self.SCREEN_SIZE = [1360,768]
         self.ASSET_SIZE = (64, 64)
         self.ASSET_PATH = 'assets'
+        self.TRACK_PATH = 'assets/tracks'
         self.BACKGROUND = 'bg.png'
         self.TRACK_0 = 'track0.png'
         self.HIGHLITE = 'highlite.png'
@@ -85,5 +86,3 @@ def full_screen(config):
     #     highlite_rect = self.highlite_img.get_rect(center = (position) )
     #     screen.blit(self.highlite_img, highlite_rect)
     #     return highlite_rect
-
-
