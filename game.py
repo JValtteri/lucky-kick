@@ -1,7 +1,7 @@
 import pygame
 from pygame import display, mouse
 import game_objects
-from config import Config, init_screen
+from config import Config, init_screen, full_screen
 import math
 import os
 
@@ -148,8 +148,8 @@ def play():
         for tree in trees:
             tree.draw(screen)
         disk.draw(screen)
-        # for tree in trees:
-        #     tree.draw(screen)
+        for tree in trees:
+            tree.draw(screen)
         power_scale.draw(screen)
         power_bar.draw(screen)
         turn_indicator.draw(screen)
@@ -158,14 +158,14 @@ def play():
         # CHECK PRESSED KEYS
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
-            camera_move(dy=-1)
+            camera_move(dy=-2)
         elif keys[pygame.K_s]:
-            camera_move(dy=1)
+            camera_move(dy=2)
 
         if keys[pygame.K_a]:
-            camera_move(dx=-1)
+            camera_move(dx=-2)
         elif keys[pygame.K_d]:
-            camera_move(dx=1)
+            camera_move(dx=2)
 
         if keys[pygame.K_RIGHT]:
             if angle > -90:
@@ -240,7 +240,7 @@ def play():
 if __name__ == "__main__":
 
     par, track_xy, disk_xy, basket_xy, trees_xy = load_track(name="track_0", hole_number=0)
-    print("{}, {}, {}, {}, {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
+    print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
     #
     # Track objects
     track = game_objects.Object(config.TRACK_0, path=os.path.join(config.TRACK_PATH, "track_0"))
@@ -249,9 +249,11 @@ if __name__ == "__main__":
     disk = game_objects.Object(config.DISK, colorkey=config.BLUE)
     disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
     disk.pos(disk_xy[0], disk_xy[1])    #(396, 574)
-    basket = game_objects.Object(config.BASKET, x=basket_xy[0], y=basket_xy[0], colorkey=config.BLUE)
+    basket = game_objects.Object(config.BASKET, x=basket_xy[0], y=basket_xy[1], colorkey=config.BLUE)
     basket.scale((64, 64))
+    basket.draw(screen)
     trees = []
     trees.append(game_objects.Object(config.TREE, x=trees_xy[0][0], y=trees_xy[0][1], colorkey=config.BLUE))
 
+    # full_screen(config)
     play()
