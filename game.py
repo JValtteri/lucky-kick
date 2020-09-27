@@ -40,8 +40,8 @@ power_bar.scale((32,1))
 power_bar.rect.bottomright = (config.SCREEN_SIZE[0]-40, config.SCREEN_SIZE[1]-20)
 turn_indicator = game_objects.Object(config.TURN_INDICATOR, x=config.SCREEN_SIZE[0]-120, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
 
-def load_track(name="track", hole_number=0):
-    f = open( os.path.join(config.TRACK_PATH, name, "track") ,'r' )
+def load_track(track_number=0, hole_number=0):
+    f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
     holes = f.readlines()
     hole = holes[hole_number].split(' ')
     par = int(hole.pop(0))
@@ -240,7 +240,7 @@ def play():
 
 if __name__ == "__main__":
 
-    par, track_xy, disk_xy, basket_xy, trees_xy = load_track(name="track_0", hole_number=0)
+    par, track_xy, disk_xy, basket_xy, trees_xy = load_track(track_number=0, hole_number=0)
     print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
     #
     # Track objects
