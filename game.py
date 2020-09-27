@@ -263,7 +263,7 @@ if __name__ == "__main__":
     trees = []
     for tree_xy in trees_xy:
         trees.append(game_objects.Object(config.TREE, x=tree_xy[0], y=tree_xy[1], colorkey=config.BLUE))
-        trees[-1].scale(( trees[-1].asset_size[0]//2, trees[-1].asset_size[0]//2 ))
+        trees[-1].scale(( round(trees[-1].asset_size[0]//1.5), round(trees[-1].asset_size[0]//1.5) ))
 
     # full_screen(config)
     play()
