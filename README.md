@@ -9,6 +9,8 @@ This will be a top down frisbee-golf game made with PyGame and Python3
 - hyzer / anhyzer
 - kicks from trees
 - Throw power
+- Level editor
+- Move Camera
 
 ## Planned Features ##
 
@@ -23,8 +25,8 @@ Subject to my whims.
 - Fore & Backhand
 - Throw accuracy ~improvement as character "learns"~
 - Menu
-- Level editor
-- Move Camera
+- ~Level editor~
+- ~Move Camera~
 - Camera re-center
 
 ### Second Wave ###
