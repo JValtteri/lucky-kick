@@ -19,77 +19,67 @@ def editor(screen, config):
     disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
 
     trees = []
+    entities = []
+    entities.append(track)
 
     while saved == False or disk_placed == False or basket_placed == False:
+
+        current_events = pygame.event.get()
+        for event in current_events:
+            ### UNIVERSAL
+            if event.type == pygame.QUIT:
+                pygame.display.quit()
+                pygame.quit()
+                sys.exit()
+
+            elif event.type == pygame.KEYDOWN:
+                print("D:{} B:{}".format(disk_placed, basket_placed))
+                if event.key in (pygame.K_SPACE,
+                                pygame.K_ESCAPE,
+                                pygame.K_RETURN,
+                                pygame.K_KP_ENTER
+                                ):
+                    saved = True
+
+            ### DISK
+            if disk_placed == False:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # PLACE THE DISK
+                    disk_placed = True
+                    entities.append(disk)
+                    basket = game_objects.Object(config.BASKET, colorkey=config.BLUE)
+                    basket.scale((64, 64))
+
+            ### BASKET
+            elif disk_placed == True and basket_placed == False:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # PLACE THE BASKET
+                    basket_placed = True
+                    entities.append(basket)
+                    trees.append(game_objects.Object(config.TREE, colorkey=config.BLUE))
+
+            ### TREES
+            else:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # PLACE A TREE
+                    trees.append(game_objects.Object(config.TREE, colorkey=config.BLUE))
+
         track.draw(screen)
         if disk_placed == False:
             mouse_x, mouse_y = mouse.get_pos()
             disk.pos(mouse_x, mouse_y)
             disk.draw(screen)
-            current_events = pygame.event.get()
-            for event in current_events:
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    disk_placed = True
-                    basket = game_objects.Object(config.BASKET, colorkey=config.BLUE)
-                    basket.scale((64, 64))
-                if event.type == pygame.QUIT:
-                    pygame.display.quit()
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key in (pygame.K_SPACE,
-                                    pygame.K_ESCAPE,
-                                    pygame.K_RETURN,
-                                    pygame.K_KP_ENTER
-                                    ):
-                        pygame.display.quit()
-                        pygame.quit()
-                        sys.exit()
 
         elif basket_placed == False:
             disk.draw(screen)
             mouse_x, mouse_y = mouse.get_pos()
             basket.pos(mouse_x, mouse_y)
             basket.draw(screen)
-            current_events = pygame.event.get()
-            for event in current_events:
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    basket_placed = True
-                    trees.append(game_objects.Object(config.TREE, colorkey=config.BLUE))
-                if event.type == pygame.QUIT:
-                    pygame.display.quit()
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key in (pygame.K_SPACE,
-                                    pygame.K_ESCAPE,
-                                    pygame.K_RETURN,
-                                    pygame.K_KP_ENTER
-                                    ):
-                        pygame.display.quit()
-                        pygame.quit()
-                        sys.exit()
 
         else:
             mouse_x, mouse_y = mouse.get_pos()
             trees[-1].pos(mouse_x, mouse_y)
             # EVENTS
-            current_events = pygame.event.get()
-            for event in current_events:
-                if event.type == pygame.QUIT:
-                    pygame.display.quit()
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    trees.append(game_objects.Object(config.TREE, colorkey=config.BLUE))
-                if event.type == pygame.KEYDOWN:
-                    print("D:{} B:{}".format(disk_placed, basket_placed))
-                    if event.key in (pygame.K_SPACE,
-                                    pygame.K_ESCAPE,
-                                    pygame.K_RETURN,
-                                    pygame.K_KP_ENTER
-                                    ):
-                        saved = True
 
         if disk_placed and basket_placed:
             disk.draw(screen)
@@ -97,17 +87,11 @@ def editor(screen, config):
             for tree in trees:
                 tree.draw(screen)
 
-        # # entities=[track, basket, disk]
-        # # CHECK PRESSED KEYS
-        #     keys = pygame.key.get_pressed()
-        #     if keys[pygame.K_w]:
-        #         camera_move(dy=-2)
-        #     elif keys[pygame.K_s]:
-        #         camera_move(dy=2)
-        #     if keys[pygame.K_a]:
-        #         camera_move(dx=-2)
-        #     elif keys[pygame.K_d]:
-        #         camera_move(dx=2)
+        camera_keys(entities, trees)
+
+        # entities=[track, basket, disk]
+        # CHECK PRESSED KEYS
+
 
         display.update()
         clock.tick(60)
@@ -142,8 +126,20 @@ def load_track(name="track_0", hole_number=0):
 def camera_move(entities, trees, dx=0, dy=0):
     # BUILD A LIST OF ENTITIES TO MOVE
     for tree in trees:
-        entities.append(tree)
+        tree.move_x(-dx)
+        tree.move_y(-dy)
     # MOVE ENTITIES
     for entity in entities:
         entity.move_x(-dx)
         entity.move_y(-dy)
+
+def camera_keys(entities, trees):
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+        camera_move(entities, trees, dy=-2)
+    elif keys[pygame.K_s]:
+        camera_move(entities, trees, dy=2)
+    if keys[pygame.K_a]:
+        camera_move(entities, trees, dx=-2)
+    elif keys[pygame.K_d]:
+        camera_move(entities, trees, dx=2)
