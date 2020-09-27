@@ -2,6 +2,7 @@ import pygame
 from pygame import display, mouse
 import game_objects
 from config import Config, init_screen, full_screen
+import editor
 import math
 import os
 
@@ -39,18 +40,20 @@ power_bar.scale((32,1))
 power_bar.rect.bottomright = (config.SCREEN_SIZE[0]-40, config.SCREEN_SIZE[1]-20)
 turn_indicator = game_objects.Object(config.TURN_INDICATOR, x=config.SCREEN_SIZE[0]-120, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
 
-def load_track(name="track_0", hole_number=0):
-    f = open( os.path.join(config.TRACK_PATH, name, "track") ,'r' )
+def load_track(track_number=0, hole_number=0):
+    f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
     holes = f.readlines()
     hole = holes[hole_number].split(' ')
+    print(hole)     # DEBUG
     par = int(hole.pop(0))
-    track = [int(i) for i in hole.pop(0).split(':', 1)]
-    disk = [int(i) for i in hole.pop(0).split(':', 1)]
-    basket = [int(i) for i in hole.pop(0).split(':', 1)]
+    track = [float(hole.pop(0)), float(hole.pop(0))]
+    disk = [float(hole.pop(0)), float(hole.pop(0))]
+    basket = [float(hole.pop(0)), float(hole.pop(0))]
     trees = []
     f.close()
-    for _ in hole:
-        trees.append( [int(i) for i in hole.pop(0).split(':')] )
+    # for _ in hole:
+    while hole != []:
+        trees.append( [ float(hole.pop(0)), float(hole.pop(0)) ] )
     return par, track, disk, basket, trees
 
 def throw_disk(power, vector):
@@ -158,14 +161,14 @@ def play():
         # CHECK PRESSED KEYS
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
-            camera_move(dy=-2)
+            camera_move(dy=-4)
         elif keys[pygame.K_s]:
-            camera_move(dy=2)
+            camera_move(dy=4)
 
         if keys[pygame.K_a]:
-            camera_move(dx=-2)
+            camera_move(dx=-4)
         elif keys[pygame.K_d]:
-            camera_move(dx=2)
+            camera_move(dx=4)
 
         if keys[pygame.K_RIGHT]:
             if angle > -90:
@@ -239,13 +242,18 @@ def play():
 
 if __name__ == "__main__":
 
-    par, track_xy, disk_xy, basket_xy, trees_xy = load_track(name="track_0", hole_number=0)
+    track_number = 1
+    hole_number = 0
+
+    # editor.editor(screen, config, track_number, hole_number)
+
+    par, track_xy, disk_xy, basket_xy, trees_xy = load_track(track_number, hole_number)
     print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
     #
     # Track objects
-    track = game_objects.Object(config.TRACK_0, path=os.path.join(config.TRACK_PATH, "track_0"))
+    track = game_objects.Object(config.TRACK, path=os.path.join(config.TRACK_PATH, "track_{}".format(track_number)))
     track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
-    track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+    track.pos(track_xy[0], track_xy[1])   #(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
     disk = game_objects.Object(config.DISK, colorkey=config.BLUE)
     disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
     disk.pos(disk_xy[0], disk_xy[1])    #(396, 574)
@@ -253,7 +261,9 @@ if __name__ == "__main__":
     basket.scale((64, 64))
     basket.draw(screen)
     trees = []
-    trees.append(game_objects.Object(config.TREE, x=trees_xy[0][0], y=trees_xy[0][1], colorkey=config.BLUE))
+    for tree_xy in trees_xy:
+        trees.append(game_objects.Object(config.TREE, x=tree_xy[0], y=tree_xy[1], colorkey=config.BLUE))
+        trees[-1].scale(( trees[-1].asset_size[0]//2, trees[-1].asset_size[0]//2 ))
 
     # full_screen(config)
     play()

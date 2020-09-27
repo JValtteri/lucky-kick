@@ -16,7 +16,7 @@ class Config():
         self.ASSET_PATH = 'assets'
         self.TRACK_PATH = 'assets/tracks'
         self.BACKGROUND = 'bg.png'
-        self.TRACK_0 = 'track0.png'
+        self.TRACK = 'track.png'
         self.HIGHLITE = 'highlite.png'
         self.BASKET = 'basket.png'
         self.DISK = 'disk.png'
