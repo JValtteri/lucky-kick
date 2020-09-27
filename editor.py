@@ -10,8 +10,11 @@ def editor(screen, config):
     disk_placed = False
     basket_placed = False
     saved = False
+    track_number = 1
+    track_path = os.path.join(config.TRACK_PATH, "track_{}".format(track_number))
+    track_file = "track.png"
 
-    track = game_objects.Object("track.png", path=os.path.join(config.TRACK_PATH, "track_1"))
+    track = game_objects.Object(track_file, path=track_path)
     track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
     track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
 
@@ -24,6 +27,7 @@ def editor(screen, config):
 
     while saved == False or disk_placed == False or basket_placed == False:
 
+        ### EVENTS
         current_events = pygame.event.get()
         for event in current_events:
             ### UNIVERSAL
@@ -64,6 +68,7 @@ def editor(screen, config):
                     # PLACE A TREE
                     trees.append(game_objects.Object(config.TREE, colorkey=config.BLUE))
 
+        ### DRAWING
         track.draw(screen)
         if disk_placed == False:
             mouse_x, mouse_y = mouse.get_pos()
@@ -79,7 +84,6 @@ def editor(screen, config):
         else:
             mouse_x, mouse_y = mouse.get_pos()
             trees[-1].pos(mouse_x, mouse_y)
-            # EVENTS
 
         if disk_placed and basket_placed:
             disk.draw(screen)
@@ -87,27 +91,33 @@ def editor(screen, config):
             for tree in trees:
                 tree.draw(screen)
 
+        # CAMERA MOVE
         camera_keys(entities, trees)
-
-        # entities=[track, basket, disk]
-        # CHECK PRESSED KEYS
-
 
         display.update()
         clock.tick(60)
 
-    trackkey = [3]
-    trackkey.append(track.x)
-    trackkey.append(track.y)
-    trackkey.append(disk.x)
-    trackkey.append(disk.y)
-    trackkey.append(basket.x)
-    trackkey.append(basket.y)
-    for tree in trees:
-        trackkey.append(tree.x)
-        trackkey.append(tree.y)
+    ### GENERATE THE TRACK DATA FOR THE NEW TRACK
 
-    print(trackkey)
+    track_data = [3]
+    track_data.append(track.x)
+    track_data.append(track.y)
+    track_data.append(disk.x)
+    track_data.append(disk.y)
+    track_data.append(basket.x)
+    track_data.append(basket.y)
+    for tree in trees:
+        track_data.append(tree.x)
+        track_data.append(tree.y)
+
+    print(track_data)
+    save_track(track_data, track_path)
+
+def save_track(track_data, track_path):
+    f = open(os.path.join(track_path, "track"), 'w')
+    f.write(track_data)
+    f.close()
+
 
 def load_track(name="track_0", hole_number=0):
     f = open( os.path.join(config.TRACK_PATH, name, "track") ,'r' )
