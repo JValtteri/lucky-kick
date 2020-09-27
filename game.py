@@ -40,18 +40,18 @@ power_bar.scale((32,1))
 power_bar.rect.bottomright = (config.SCREEN_SIZE[0]-40, config.SCREEN_SIZE[1]-20)
 turn_indicator = game_objects.Object(config.TURN_INDICATOR, x=config.SCREEN_SIZE[0]-120, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
 
-def load_track(name="track_0", hole_number=0):
+def load_track(name="track", hole_number=0):
     f = open( os.path.join(config.TRACK_PATH, name, "track") ,'r' )
     holes = f.readlines()
     hole = holes[hole_number].split(' ')
     par = int(hole.pop(0))
-    track = [int(i) for i in hole.pop(0).split(':', 1)]
-    disk = [int(i) for i in hole.pop(0).split(':', 1)]
-    basket = [int(i) for i in hole.pop(0).split(':', 1)]
+    track = [int(hole.pop(0)), int(hole.pop(0))]
+    disk = [int(hole.pop(0)), int(hole.pop(0))]
+    basket = [int(hole.pop(0)), int(hole.pop(0))]
     trees = []
     f.close()
     for _ in hole:
-        trees.append( [int(i) for i in hole.pop(0).split(':')] )
+        trees.append( [ int(hole.pop(0)), int(hole.pop(0)) ] )
     return par, track, disk, basket, trees
 
 def throw_disk(power, vector):
@@ -257,5 +257,5 @@ if __name__ == "__main__":
     trees.append(game_objects.Object(config.TREE, x=trees_xy[0][0], y=trees_xy[0][1], colorkey=config.BLUE))
 
     # full_screen(config)
-    editor.editor(screen, config)
-    # play()
+    # editor.editor(screen, config)
+    play()
