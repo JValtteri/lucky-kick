@@ -5,12 +5,11 @@ import os
 from config import Config
 import sys
 
-def editor(screen, config):
+def editor(screen, config, track_number, hole_number=0):
     clock = pygame.time.Clock()
     disk_placed = False
     basket_placed = False
     saved = False
-    track_number = 1
     track_path = os.path.join(config.TRACK_PATH, "track_{}".format(track_number))
     track_file = "track.png"
 
@@ -99,23 +98,23 @@ def editor(screen, config):
 
     ### GENERATE THE TRACK DATA FOR THE NEW TRACK
 
-    track_data = [3]
-    track_data.append(track.x)
-    track_data.append(track.y)
-    track_data.append(disk.x)
-    track_data.append(disk.y)
-    track_data.append(basket.x)
-    track_data.append(basket.y)
+    track_data = ['3']
+    track_data.append(str(track.x))
+    track_data.append(str(track.y))
+    track_data.append(str(disk.x))
+    track_data.append(str(disk.y))
+    track_data.append(str(basket.x))
+    track_data.append(str(basket.y))
     for tree in trees:
-        track_data.append(tree.x)
-        track_data.append(tree.y)
+        track_data.append(str(tree.x))
+        track_data.append(str(tree.y))
 
     print(track_data)
     save_track(track_data, track_path)
 
 def save_track(track_data, track_path):
     f = open(os.path.join(track_path, "track"), 'w')
-    f.write(track_data)
+    f.write(' '.join(track_data))
     f.close()
 
 
@@ -146,10 +145,10 @@ def camera_move(entities, trees, dx=0, dy=0):
 def camera_keys(entities, trees):
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        camera_move(entities, trees, dy=-2)
+        camera_move(entities, trees, dy=-4)
     elif keys[pygame.K_s]:
-        camera_move(entities, trees, dy=2)
+        camera_move(entities, trees, dy=4)
     if keys[pygame.K_a]:
-        camera_move(entities, trees, dx=-2)
+        camera_move(entities, trees, dx=-4)
     elif keys[pygame.K_d]:
-        camera_move(entities, trees, dx=2)
+        camera_move(entities, trees, dx=4)
