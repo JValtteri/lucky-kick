@@ -44,13 +44,15 @@ def load_track(track_number=0, hole_number=0):
     f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
     holes = f.readlines()
     hole = holes[hole_number].split(' ')
+    print(hole)     # DEBUG
     par = int(hole.pop(0))
     track = [float(hole.pop(0)), float(hole.pop(0))]
     disk = [float(hole.pop(0)), float(hole.pop(0))]
     basket = [float(hole.pop(0)), float(hole.pop(0))]
     trees = []
     f.close()
-    for _ in hole:
+    # for _ in hole:
+    while hole != []:
         trees.append( [ float(hole.pop(0)), float(hole.pop(0)) ] )
     return par, track, disk, basket, trees
 
@@ -243,7 +245,7 @@ if __name__ == "__main__":
     track_number = 1
     hole_number = 0
 
-    editor.editor(screen, config, track_number, hole_number)
+    # editor.editor(screen, config, track_number, hole_number)
 
     par, track_xy, disk_xy, basket_xy, trees_xy = load_track(track_number, hole_number)
     print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
@@ -261,6 +263,7 @@ if __name__ == "__main__":
     trees = []
     for tree_xy in trees_xy:
         trees.append(game_objects.Object(config.TREE, x=tree_xy[0], y=tree_xy[1], colorkey=config.BLUE))
+        trees[-1].scale(( trees[-1].asset_size[0]//2, trees[-1].asset_size[0]//2 ))
 
     # full_screen(config)
     play()

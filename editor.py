@@ -9,7 +9,7 @@ def editor(screen, config, track_number, hole_number=0):
     clock = pygame.time.Clock()
     disk_placed = False
     basket_placed = False
-    saved = False
+    save = False
     track_path = os.path.join(config.TRACK_PATH, "track_{}".format(track_number))
     track_file = "track.png"
 
@@ -24,7 +24,7 @@ def editor(screen, config, track_number, hole_number=0):
     entities = []
     entities.append(track)
 
-    while saved == False or disk_placed == False or basket_placed == False:
+    while save == False or disk_placed == False or basket_placed == False:
 
         ### EVENTS
         current_events = pygame.event.get()
@@ -36,13 +36,12 @@ def editor(screen, config, track_number, hole_number=0):
                 sys.exit()
 
             elif event.type == pygame.KEYDOWN:
-                print("D:{} B:{}".format(disk_placed, basket_placed))
                 if event.key in (pygame.K_SPACE,
                                 pygame.K_ESCAPE,
                                 pygame.K_RETURN,
                                 pygame.K_KP_ENTER
                                 ):
-                    saved = True
+                    save = True
 
             ### DISK
             if disk_placed == False:
