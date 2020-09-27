@@ -2,6 +2,7 @@ import pygame
 from pygame import display, mouse
 import game_objects
 from config import Config, init_screen, full_screen
+import editor
 import math
 import os
 
@@ -256,4 +257,5 @@ if __name__ == "__main__":
     trees.append(game_objects.Object(config.TREE, x=trees_xy[0][0], y=trees_xy[0][1], colorkey=config.BLUE))
 
     # full_screen(config)
-    play()
+    editor.editor(screen, config)
+    # play()
