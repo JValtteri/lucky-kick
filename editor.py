@@ -59,12 +59,14 @@ def editor(screen, config, track_number, hole_number=0):
                     basket_placed = True
                     entities.append(basket)
                     trees.append(game_objects.Object(config.TREE, colorkey=config.BLUE))
+                    trees[-1].scale(( round(trees[-1].asset_size[0]//1.5), round(trees[-1].asset_size[0]//1.5) ))
 
             ### TREES
             else:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # PLACE A TREE
                     trees.append(game_objects.Object(config.TREE, colorkey=config.BLUE))
+                    trees[-1].scale(( round(trees[-1].asset_size[0]//1.5), round(trees[-1].asset_size[0]//1.5) ))
 
         ### DRAWING
         track.draw(screen)

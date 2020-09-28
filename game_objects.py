@@ -24,7 +24,7 @@ class Object():
                 expire = False,
                 time = -1,
                 visible = True,
-                colorkey = False
+                colorkey = False,
                 ):
 
         self.visible = visible
@@ -192,13 +192,14 @@ class Actor(Object):
 
 class Texts():
 
-    def __init__(self, font, message="[insert text]", size=40, color=(225,225,225), xy=(0, 0), path='assets' ):
+    def __init__(self, font, message="[insert text]", size=40, color=(225,225,225), xy=(0, 0), path='assets', tag='' ):
         self.game_font = pygame.font.Font( os.path.join(path, font) , size)
         self.message = message
         self.color = color
         self.xy = xy
         self.surface = self.update()
         self.rect = self.get_rect()
+        self.tag = tag
 
     def get_rect(self):
         rect = self.surface.get_rect(center = self.xy )
