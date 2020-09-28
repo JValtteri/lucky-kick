@@ -5,6 +5,7 @@ from config import full_screen
 import webbrowser
 import sys
 import os
+from time import sleep
 
 def menu(screen, clock, config):
 
@@ -161,3 +162,57 @@ def track_menu(screen, clock, config, exit_button, credit_button, highlite):
         clock.tick(30)
 
     return track_number
+
+def interm_screen(screen, config, throw_number, scores):
+    final_throws = game_objects.Texts(config.SC_FONT, "Score: {}".format(throw_number), 80, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2) )
+    final_throws.draw(screen)
+    display.update()
+    skip = False
+    current_events = pygame.event.get()
+    for event in current_events:
+        # KEYBOARD
+        if event.type == pygame.KEYDOWN:
+            skip = True
+
+        # APP CLOSE
+        if event.type == pygame.QUIT:
+            pygame.display.quit()
+            pygame.quit()
+            sys.exit()
+
+        # MOUSE CLICK
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            skip = True
+    if skip == False:
+        sleep(3)
+    bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+    bacground.scale(config.SCREEN_SIZE)
+    bacground.draw(screen)
+    # if len(scores) > 1:
+    throw_list = '-'.join(scores)
+    final_score = sum([int(i) for i in scores])
+    throw_history = game_objects.Texts(config.SC_FONT, "{} = {}".format(throw_list, final_score), 60, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2) )
+    throw_history.draw(screen)
+    display.update()
+    skip = False
+    current_events = pygame.event.get()
+    for event in current_events:
+        # KEYBOARD
+        if event.type == pygame.KEYDOWN:
+            skip = True
+
+        # APP CLOSE
+        if event.type == pygame.QUIT:
+            pygame.display.quit()
+            pygame.quit()
+            sys.exit()
+
+        # MOUSE CLICK
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            skip = True
+    if skip == False:
+        sleep(5)
+
+def end_screen():
+    # final_throws = game_objects.Texts(config.RUBIK_FONT, "START", 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] - 70) )
+    pass

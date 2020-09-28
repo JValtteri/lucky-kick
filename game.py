@@ -268,6 +268,7 @@ if __name__ == "__main__":
     while True:
         track_number, hole_number, mode = menu.menu(screen, clock, config)
         total_holes = 1
+        scores = []
         # full_screen(config)
 
         if mode == 0:
@@ -277,7 +278,10 @@ if __name__ == "__main__":
                 print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
                 throw_number = play()
                 print("throws: {}".format(throw_number))     # debug
+                scores.append(str(throw_number))
+                menu.interm_screen(screen, config, throw_number, scores)
                 hole_number += 1
+            menu.end_screen()
         elif mode == 1:
             editor.editor(screen, config, track_number, hole_number)
         else:
