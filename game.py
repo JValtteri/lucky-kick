@@ -160,6 +160,8 @@ def play():
     text_score.update(message='Score: {}'.format(throw_number))
     text_score.get_rect()
 
+    pygame.event.get()  #   Catch the MOUSEBUTTON_UP event from menu
+
     while scored == False and running:
         bacground.draw(screen)
         track.draw(screen)
@@ -258,12 +260,12 @@ def play():
 
 if __name__ == "__main__":
 
-    # track_number, hole_number = menu.menu(screen, clock, config)
-    track_number = 0
-    hole_number = 0
-    editor.editor(screen, config, track_number, hole_number)
-
+    track_number, hole_number, mode = menu.menu(screen, clock, config)
     par, track_xy, disk_xy, basket_xy, trees_xy = load_track(track_number, hole_number)
     print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
     # full_screen(config)
-    play()
+
+    if mode == 0:
+        play()
+    elif mode == 1:
+        editor.editor(screen, config, track_number, hole_number)
