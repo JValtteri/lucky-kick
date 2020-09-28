@@ -3,6 +3,7 @@ from pygame import display, mouse
 import game_objects
 from config import Config, init_screen, full_screen
 import editor
+import menu
 import math
 import os
 
@@ -56,20 +57,20 @@ def load_track(track_number=0, hole_number=0):
         trees.append( [ float(hole.pop(0)), float(hole.pop(0)) ] )
     return par, track, disk, basket, trees
 
-def throw_disk(power, vector):
+def throw_disk(power, vector, disk):
     disk.speed(power)
     disk.u_vector(vector)
 
-def throw(throw_number, power):
+def throw(throw_number, power, disk):
     throw_number += 1
     text_score.update(message='Throws: {}'.format(throw_number))
     text_score.get_rect()
     mouse_x, mouse_y = mouse.get_pos()
     vector = game_objects.vector(disk.rect.center, (mouse_x, mouse_y))
-    throw_disk(power, vector)
+    throw_disk(power, vector, disk)
     return throw_number
 
-def drag(turn):
+def drag(turn, disk):
     if disk.v < 2:
         disk.v -= config.DRAG * config.MAX_POWER
     disk.v -= config.DRAG * disk.v
@@ -97,10 +98,10 @@ def vector_modifier(vectors):
 def check_basket_collision(disk, basket):
     scored = False
     if disk.rect.collidepoint(basket):
-        scored = score()
+        scored = score(disk)
     return scored
 
-def camera_move(dx=0, dy=0):
+def camera_move(track, basket, disk, trees, dx=0, dy=0):
     # BUILD A LIST OF ENTITIES TO MOVE
     entities=[track, basket, disk]
     for tree in trees:
@@ -110,7 +111,7 @@ def camera_move(dx=0, dy=0):
         entity.move_x(-dx)
         entity.move_y(-dy)
 
-def score():
+def score(disk):
     # play chink-sound
     print("score")
     disk.v = 0
@@ -134,6 +135,21 @@ def kick(disk, collision_vector):
     return new_vect
 
 def play():
+    # Track objects
+    track = game_objects.Object(config.TRACK, path=os.path.join(config.TRACK_PATH, "track_{}".format(track_number)))
+    track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
+    track.pos(track_xy[0], track_xy[1])   #(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+    disk = game_objects.Object(config.DISK, colorkey=config.BLUE)
+    disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
+    disk.pos(disk_xy[0], disk_xy[1])    #(396, 574)
+    basket = game_objects.Object(config.BASKET, x=basket_xy[0], y=basket_xy[1], colorkey=config.BLUE)
+    basket.scale((64, 64))
+    basket.draw(screen)
+    trees = []
+    for tree_xy in trees_xy:
+        trees.append(game_objects.Object(config.TREE, x=tree_xy[0], y=tree_xy[1], colorkey=config.BLUE))
+        trees[-1].scale(( round(trees[-1].asset_size[0]//1.5), round(trees[-1].asset_size[0]//1.5) ))
+
     scored = False
     running = True
     charging = False
@@ -143,6 +159,8 @@ def play():
     throw_number = 0
     text_score.update(message='Score: {}'.format(throw_number))
     text_score.get_rect()
+
+    pygame.event.get()  #   Catch the MOUSEBUTTON_UP event from menu
 
     while scored == False and running:
         bacground.draw(screen)
@@ -161,14 +179,14 @@ def play():
         # CHECK PRESSED KEYS
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
-            camera_move(dy=-4)
+            camera_move(track, basket, disk, trees, dy=-4)
         elif keys[pygame.K_s]:
-            camera_move(dy=4)
+            camera_move(track, basket, disk, trees, dy=4)
 
         if keys[pygame.K_a]:
-            camera_move(dx=-4)
+            camera_move(track, basket, disk, trees, dx=-4)
         elif keys[pygame.K_d]:
-            camera_move(dx=4)
+            camera_move(track, basket, disk, trees, dx=4)
 
         if keys[pygame.K_RIGHT]:
             if angle > -90:
@@ -223,12 +241,12 @@ def play():
                 # AND
                 # DISK IS STATIONARY
                 charging = False
-                throw_number = throw(throw_number, power)
+                throw_number = throw(throw_number, power, disk)
                 turn = config.TURN + init_turn
 
         disk.move_2d()
         if disk.v > 0:
-            turn = drag(turn)
+            turn = drag(turn, disk)
 
         elif disk.v < 0:
             disk.speed(0)
@@ -242,28 +260,15 @@ def play():
 
 if __name__ == "__main__":
 
-    track_number = 1
-    hole_number = 0
+    while True:
+        track_number, hole_number, mode = menu.menu(screen, clock, config)
+        par, track_xy, disk_xy, basket_xy, trees_xy = load_track(track_number, hole_number)
+        print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
+        # full_screen(config)
 
-    # editor.editor(screen, config, track_number, hole_number)
-
-    par, track_xy, disk_xy, basket_xy, trees_xy = load_track(track_number, hole_number)
-    print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
-    #
-    # Track objects
-    track = game_objects.Object(config.TRACK, path=os.path.join(config.TRACK_PATH, "track_{}".format(track_number)))
-    track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
-    track.pos(track_xy[0], track_xy[1])   #(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
-    disk = game_objects.Object(config.DISK, colorkey=config.BLUE)
-    disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
-    disk.pos(disk_xy[0], disk_xy[1])    #(396, 574)
-    basket = game_objects.Object(config.BASKET, x=basket_xy[0], y=basket_xy[1], colorkey=config.BLUE)
-    basket.scale((64, 64))
-    basket.draw(screen)
-    trees = []
-    for tree_xy in trees_xy:
-        trees.append(game_objects.Object(config.TREE, x=tree_xy[0], y=tree_xy[1], colorkey=config.BLUE))
-        trees[-1].scale(( round(trees[-1].asset_size[0]//1.5), round(trees[-1].asset_size[0]//1.5) ))
-
-    # full_screen(config)
-    play()
+        if mode == 0:
+            play()
+        elif mode == 1:
+            editor.editor(screen, config, track_number, hole_number)
+        else:
+            break
