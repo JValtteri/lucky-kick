@@ -42,11 +42,17 @@ power_bar.rect.bottomright = (config.SCREEN_SIZE[0]-40, config.SCREEN_SIZE[1]-20
 turn_indicator = game_objects.Object(config.TURN_INDICATOR, x=config.SCREEN_SIZE[0]-120, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
 
 def load_track(track_number=0, hole_number=0):
+    print("hole_number: {}".format(hole_number))
+    code = 0        # Status code to signal succass or failure
     f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
     holes = f.readlines()
+
+    total_holes = len(holes)
+
     hole = holes[hole_number].split(' ')
     print(hole)     # DEBUG
     par = int(hole.pop(0))
+
     track = [float(hole.pop(0)), float(hole.pop(0))]
     disk = [float(hole.pop(0)), float(hole.pop(0))]
     basket = [float(hole.pop(0)), float(hole.pop(0))]
@@ -55,7 +61,7 @@ def load_track(track_number=0, hole_number=0):
     # for _ in hole:
     while hole != []:
         trees.append( [ float(hole.pop(0)), float(hole.pop(0)) ] )
-    return par, track, disk, basket, trees
+    return par, track, disk, basket, trees, total_holes, code
 
 def throw_disk(power, vector, disk):
     disk.speed(power)
@@ -255,19 +261,23 @@ def play():
 
         display.update()
         clock.tick(60)
-
-
+    return throw_number
 
 if __name__ == "__main__":
 
     while True:
         track_number, hole_number, mode = menu.menu(screen, clock, config)
-        par, track_xy, disk_xy, basket_xy, trees_xy = load_track(track_number, hole_number)
-        print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
+        total_holes = 1
         # full_screen(config)
 
         if mode == 0:
-            play()
+            while hole_number < total_holes:
+                print("holenumber: {}, total holes: {}".format(hole_number, total_holes))
+                par, track_xy, disk_xy, basket_xy, trees_xy, total_holes, code = load_track(track_number, hole_number)
+                print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
+                throw_number = play()
+                print("throws: {}".format(throw_number))     # debug
+                hole_number += 1
         elif mode == 1:
             editor.editor(screen, config, track_number, hole_number)
         else:
