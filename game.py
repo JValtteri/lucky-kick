@@ -260,12 +260,15 @@ def play():
 
 if __name__ == "__main__":
 
-    track_number, hole_number, mode = menu.menu(screen, clock, config)
-    par, track_xy, disk_xy, basket_xy, trees_xy = load_track(track_number, hole_number)
-    print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
-    # full_screen(config)
+    while True:
+        track_number, hole_number, mode = menu.menu(screen, clock, config)
+        par, track_xy, disk_xy, basket_xy, trees_xy = load_track(track_number, hole_number)
+        print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
+        # full_screen(config)
 
-    if mode == 0:
-        play()
-    elif mode == 1:
-        editor.editor(screen, config, track_number, hole_number)
+        if mode == 0:
+            play()
+        elif mode == 1:
+            editor.editor(screen, config, track_number, hole_number)
+        else:
+            break

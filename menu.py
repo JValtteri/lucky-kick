@@ -75,10 +75,7 @@ def menu(screen, clock, config):
                     in_menu = False
 
                 elif exit_button.rect.collidepoint((mouse_x, mouse_y)):
-                    # pygame.display.quit()
-                    # pygame.quit()
-                    # sys.exit()
-                    pass
+                    in_menu = False
 
                 # elif res_rect.collidepoint((mouse_x, mouse_y)):
                 #     screen = full_screen(config)
