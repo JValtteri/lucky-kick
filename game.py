@@ -15,6 +15,7 @@ This is free software, and you are welcome to redistribute it
 
 config = Config()
 screen = init_screen(config)
+full_screen(config)
 clock = pygame.time.Clock()
 
 high_score = None
@@ -269,7 +270,6 @@ if __name__ == "__main__":
         track_number, hole_number, mode = menu.menu(screen, clock, config)
         total_holes = 1
         scores = []
-        # full_screen(config)
 
         if mode == 0:
             while hole_number < total_holes:
