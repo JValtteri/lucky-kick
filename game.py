@@ -292,6 +292,12 @@ if __name__ == "__main__":
 
         elif mode == 16:
             track_number = menu.track_menu(screen, clock, config)
-            # editor.editor(screen, config, track_number, hole_number)
+            _, _, _, _, _, total_holes, code = load_track(track_number, 0)
+            if code == True:
+                track_number = menu.track_menu(screen, clock, config, max_number=total_holes+1)
+                editor.editor(screen, config, track_number, hole_number)
+            elif code == False:
+                print("New Track")
+                editor.editor(screen, config, track_number, 1)
         else:
             break

@@ -119,19 +119,25 @@ def save_track(track_data, track_path):
     f.close()
 
 
-def load_track(name="track_0", hole_number=0):
-    f = open( os.path.join(config.TRACK_PATH, name, "track") ,'r' )
-    holes = f.readlines()
-    hole = holes[hole_number].split(' ')
-    par = int(hole.pop(0))
-    track = [int(i) for i in hole.pop(0).split(':', 1)]
-    disk = [int(i) for i in hole.pop(0).split(':', 1)]
-    basket = [int(i) for i in hole.pop(0).split(':', 1)]
-    trees = []
-    f.close()
-    for _ in hole:
-        trees.append( [int(i) for i in hole.pop(0).split(':')] )
-    return par, track, disk, basket, trees
+def load_track(config, track_number=0, hole_number=0):
+    print("hole_number: {}".format(hole_number))
+    code = False        # Status code to signal succass or failure
+    try:
+        f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
+        holes = f.readlines()
+
+        total_holes = len(holes)
+
+        hole = holes[hole_number]
+        print(hole)     # DEBUG
+        f.close()
+        # for _ in hole:
+        code = True
+    except FileNotFoundError:
+        total_holes = 0
+        return [], [], 0, total_holes, code
+    return holes, hole, total_holes, code
+
 
 def camera_move(entities, trees, dx=0, dy=0):
     # BUILD A LIST OF ENTITIES TO MOVE
