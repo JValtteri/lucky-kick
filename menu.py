@@ -89,7 +89,7 @@ def menu(screen, clock, config):
 
     return track_number, hole_number, mode
 
-def track_menu(screen, clock, config, exit_button, credit_button, highlite):
+def track_menu(screen, clock, config, exit_button, credit_button, highlite, max_number=10):
     bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
     bacground.scale(config.SCREEN_SIZE)
     track = game_objects.Object(config.TRACK, path=os.path.join(config.TRACK_PATH, "track_0"))
@@ -97,7 +97,7 @@ def track_menu(screen, clock, config, exit_button, credit_button, highlite):
     track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
     font_size = 60
     buttons=[]
-    for i in range(1, 11):
+    for i in range(1, max_number+1):
         button = game_objects.Texts(config.SC_FONT, str(i), size=font_size, xy=(config.SCREEN_SIZE[0]/2+100-i%2*200, 100+(i-1)//2*100), tag=i)
         buttons.append(button)
     buttons.append(credit_button)

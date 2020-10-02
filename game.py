@@ -14,7 +14,8 @@ This is free software, and you are welcome to redistribute it
 """)
 
 config = Config()
-screen = init_screen(config)
+screen, screen_size = init_screen(config)
+config.update_screen_size(screen_size)
 full_screen(config)
 clock = pygame.time.Clock()
 
