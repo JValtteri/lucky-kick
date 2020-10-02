@@ -7,6 +7,7 @@ import sys
 import os
 from time import sleep
 
+
 def menu(screen, clock, config):
 
     bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)

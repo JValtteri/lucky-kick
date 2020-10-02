@@ -283,6 +283,7 @@ if __name__ == "__main__":
                 menu.interm_screen(screen, config, throw_number, scores)
                 hole_number += 1
             menu.end_screen()
+
         elif mode == 1:
             editor.editor(screen, config, track_number, hole_number)
         else:
