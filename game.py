@@ -290,7 +290,8 @@ if __name__ == "__main__":
                 hole_number += 1
             menu.end_screen()
 
-        elif mode == 1:
-            editor.editor(screen, config, track_number, hole_number)
+        elif mode == 16:
+            track_number = menu.track_menu(screen, clock, config)
+            # editor.editor(screen, config, track_number, hole_number)
         else:
             break

@@ -16,10 +16,12 @@ def menu(screen, clock, config):
     track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
     track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
     highlite = game_objects.Object(config.HIGHLITE, colorkey=(163,73,164))
-    start_button = game_objects.Texts(config.SC_FONT, "PLAY", xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] - 70))
-    exit_button = game_objects.Texts(config.SC_FONT, "Exit", xy=(config.SCREEN_SIZE[0] / 2 + 200, config.SCREEN_SIZE[1] - 70))
+    title_text = game_objects.Texts(config.RUBIK_FONT, "Lucky Kick", xy=(config.SCREEN_SIZE[0]/2, config.SCREEN_SIZE[1]/2), size=80)
+    start_button = game_objects.Texts(config.RUBIK_FONT, "PLAY", xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1]/2 + 100))
+    editor_button = game_objects.Texts(config.RUBIK_FONT, "Editor", xy=(config.SCREEN_SIZE[0]/2, config.SCREEN_SIZE[1]/2 + 160), size=30)
+    exit_button = game_objects.Texts(config.RUBIK_FONT, "Exit", xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1]/2 + 220), size=30)
     credit_button = game_objects.Texts(config.RUBIK_FONT, "(c) 2020 JValtteri", size=20, color=(205,205,205), xy=(100, config.SCREEN_SIZE[1] - 30 ))
-    buttons = (start_button, exit_button, credit_button)
+    buttons = (start_button, editor_button, exit_button, credit_button)
 
     track_number = 0
     hole_number = 0
@@ -29,7 +31,9 @@ def menu(screen, clock, config):
 
         bacground.draw(screen)
         track.draw(screen)
+        title_text.draw(screen)
         start_button.draw(screen)
+        editor_button.draw(screen)
         exit_button.draw(screen)
         credit_button.draw(screen)
 
@@ -72,12 +76,16 @@ def menu(screen, clock, config):
                 mouse_x, mouse_y = mouse.get_pos()
                 if start_button.rect.collidepoint((mouse_x, mouse_y)):
                     mode = 0
-                    track_number = track_menu(screen, clock, config, exit_button, credit_button, highlite)
-                    #hole_number = track_menu(screen, clock, config, exit_button, credit_button, highlite)
+                    track_number = track_menu(screen, clock, config)
+                    #hole_number = track_menu(screen, clock, config)
                     in_menu = False
 
                 elif exit_button.rect.collidepoint((mouse_x, mouse_y)):
                     in_menu = False
+
+                elif editor_button.rect.collidepoint((mouse_x, mouse_y)):
+                    in_menu = False
+                    mode = 16
 
                 # elif res_rect.collidepoint((mouse_x, mouse_y)):
                 #     screen = full_screen(config)
@@ -90,12 +98,15 @@ def menu(screen, clock, config):
 
     return track_number, hole_number, mode
 
-def track_menu(screen, clock, config, exit_button, credit_button, highlite, max_number=10):
+def track_menu(screen, clock, config, max_number=10):
     bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
     bacground.scale(config.SCREEN_SIZE)
     track = game_objects.Object(config.TRACK, path=os.path.join(config.TRACK_PATH, "track_0"))
     track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
     track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+    exit_button = game_objects.Texts(config.RUBIK_FONT, "Exit", xy=(config.SCREEN_SIZE[0] / 2 + 200, config.SCREEN_SIZE[1] - 70), size=40)
+    credit_button = game_objects.Texts(config.RUBIK_FONT, "(c) 2020 JValtteri", size=20, color=(205,205,205), xy=(100, config.SCREEN_SIZE[1] - 30 ))
+    highlite = game_objects.Object(config.HIGHLITE, colorkey=(163,73,164))
     font_size = 60
     buttons=[]
     for i in range(1, max_number+1):

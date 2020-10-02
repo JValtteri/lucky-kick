@@ -48,7 +48,8 @@ class Config():
 def init_screen(config):
     pygame.init()
     monitor_info = pygame.display.Info()
-    screen_size = (monitor_info.current_w, monitor_info.current_h)
+    # screen_size = (monitor_info.current_w, monitor_info.current_h)
+    screen_size = config.SCREEN_SIZE
     screen = pygame.display.set_mode((screen_size))   #((config.SCREEN_SIZE))#, pygame.FULLSCREEN)
     pygame.display.set_caption('Lucky Kick Frisbee Golf')
     return screen, screen_size
