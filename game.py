@@ -16,7 +16,7 @@ This is free software, and you are welcome to redistribute it
 config = Config()
 screen, screen_size = init_screen(config)
 config.update_screen_size(screen_size)
-full_screen(config)
+# full_screen(config)
 clock = pygame.time.Clock()
 
 high_score = None
@@ -201,6 +201,12 @@ def check_tree_collision(disk, trees):
             break
     return collision_vector
 
+def tree_drag(disk, trees):
+    for tree in trees:
+        if disk.rect.colliderect(tree.rect) and disk.v > 0:
+            disk.v -= config.DRAG * 5
+            break
+
 def kick(disk, collision_vector):
     vect_0 = disk.u_vect
     vect_1 = collision_vector
@@ -297,8 +303,11 @@ def play(track_data):
                 turn_indicator.rotate((-math.tan(math.radians(angle)), -1 ))
                 print(angle)
 
+        # SCORE
         scored = check_basket_collision(disk, (basket.x, basket.y))
+        # COLLISION
         collision_vector = check_tree_collision(disk, trees)
+        tree_drag(disk, trees)
         if collision_vector is not None:
             kick_vector = kick(disk, collision_vector)
             disk.u_vector(kick_vector)
