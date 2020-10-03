@@ -10,17 +10,56 @@ from time import sleep
 
 def menu(screen, clock, config):
 
-    bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+    bacground = game_objects.Object(
+        config.BACKGROUND,
+        x=config.SCREEN_SIZE[0]/2,
+        y=config.SCREEN_SIZE[1]/2
+        )
     bacground.scale(config.SCREEN_SIZE)
-    track = game_objects.Object(config.TRACK, path=os.path.join(config.TRACK_PATH, "track_0"))
+    track = game_objects.Object(
+        config.TRACK,
+        path=os.path.join(config.TRACK_PATH, "track_0")
+        )
     track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
     track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
-    highlite = game_objects.Object(config.HIGHLITE, colorkey=(163,73,164))
-    title_text = game_objects.Texts(config.RUBIK_FONT, "Lucky Kick", xy=(config.SCREEN_SIZE[0]/2, config.SCREEN_SIZE[1]/2), size=80)
-    start_button = game_objects.Texts(config.RUBIK_FONT, "PLAY", xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1]/2 + 100))
-    editor_button = game_objects.Texts(config.RUBIK_FONT, "Editor", xy=(config.SCREEN_SIZE[0]/2, config.SCREEN_SIZE[1]/2 + 160), size=30)
-    exit_button = game_objects.Texts(config.RUBIK_FONT, "Exit", xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1]/2 + 220), size=30)
-    credit_button = game_objects.Texts(config.RUBIK_FONT, "(c) 2020 JValtteri", size=20, color=(205,205,205), xy=(100, config.SCREEN_SIZE[1] - 30 ))
+    highlite = game_objects.Object(
+        config.HIGHLITE,
+        colorkey=(163,73,164)
+        )
+    title_text = game_objects.Texts(
+        config.RUBIK_FONT,
+        "Lucky Kick",
+        xy=(config.SCREEN_SIZE[0]/2,
+        config.SCREEN_SIZE[1]/2),
+        size=80
+        )
+    start_button = game_objects.Texts(
+        config.RUBIK_FONT,
+        "PLAY",
+        xy=(config.SCREEN_SIZE[0] / 2,
+        config.SCREEN_SIZE[1]/2 + 100)
+        )
+    editor_button = game_objects.Texts(
+        config.RUBIK_FONT,
+        "Editor",
+        xy=(config.SCREEN_SIZE[0]/2,
+        config.SCREEN_SIZE[1]/2 + 160),
+        size=30
+        )
+    exit_button = game_objects.Texts(
+        config.RUBIK_FONT,
+        "Exit",
+        xy=(config.SCREEN_SIZE[0] / 2,
+        config.SCREEN_SIZE[1]/2 + 220),
+        size=30
+        )
+    credit_button = game_objects.Texts(
+        config.RUBIK_FONT,
+        "(c) 2020 JValtteri",
+        size=20,
+        color=(205,205,205),
+        xy=(100, config.SCREEN_SIZE[1] - 30 )
+        )
     buttons = (start_button, editor_button, exit_button, credit_button)
 
     track_number = 0
@@ -99,18 +138,45 @@ def menu(screen, clock, config):
     return track_number, hole_number, mode
 
 def track_menu(screen, clock, config, max_number=10):
-    bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+    bacground = game_objects.Object(
+        config.BACKGROUND,
+        x=config.SCREEN_SIZE[0]/2,
+        y=config.SCREEN_SIZE[1]/2
+        )
     bacground.scale(config.SCREEN_SIZE)
-    track = game_objects.Object(config.TRACK, path=os.path.join(config.TRACK_PATH, "track_0"))
+    track = game_objects.Object(
+        config.TRACK,
+        path=os.path.join(config.TRACK_PATH, "track_0")
+        )
     track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
     track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
-    exit_button = game_objects.Texts(config.RUBIK_FONT, "Exit", xy=(config.SCREEN_SIZE[0] / 2 + 200, config.SCREEN_SIZE[1] - 70), size=40)
-    credit_button = game_objects.Texts(config.RUBIK_FONT, "(c) 2020 JValtteri", size=20, color=(205,205,205), xy=(100, config.SCREEN_SIZE[1] - 30 ))
-    highlite = game_objects.Object(config.HIGHLITE, colorkey=(163,73,164))
+    exit_button = game_objects.Texts(
+        config.RUBIK_FONT,
+        "Exit",
+        xy=(config.SCREEN_SIZE[0] / 2 + 200, config.SCREEN_SIZE[1] - 70),
+        size=40
+        )
+    credit_button = game_objects.Texts(
+        config.RUBIK_FONT,
+        "(c) 2020 JValtteri",
+        size=20,
+        color=(205,205,205),
+        xy=(100, config.SCREEN_SIZE[1] - 30 )
+        )
+    highlite = game_objects.Object(
+        config.HIGHLITE,
+        colorkey=(163,73,164)
+        )
     font_size = 60
     buttons=[]
     for i in range(1, max_number+1):
-        button = game_objects.Texts(config.SC_FONT, str(i), size=font_size, xy=(config.SCREEN_SIZE[0]/2+100-i%2*200, 100+(i-1)//2*100), tag=i)
+        button = game_objects.Texts(
+            config.SC_FONT,
+            str(i),
+            size=font_size,
+            xy=(config.SCREEN_SIZE[0]/2+100-i%2*200, 100+(i-1)//2*100),
+            tag=i
+            )
         buttons.append(button)
     buttons.append(credit_button)
     buttons.append(exit_button)
@@ -171,7 +237,13 @@ def track_menu(screen, clock, config, max_number=10):
     return track_number
 
 def interm_screen(screen, config, throw_number, scores):
-    final_throws = game_objects.Texts(config.SC_FONT, "Score: {}".format(throw_number), 80, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2) )
+    final_throws = game_objects.Texts(
+        config.SC_FONT,
+        "Score: {}".format(throw_number),
+        size=80,
+        color=config.UI_WHITE,
+        xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2)
+        )
     final_throws.draw(screen)
     display.update()
     skip = False
@@ -192,13 +264,23 @@ def interm_screen(screen, config, throw_number, scores):
             skip = True
     if skip == False:
         sleep(3)
-    bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+    bacground = game_objects.Object(
+        config.BACKGROUND,
+        x=config.SCREEN_SIZE[0]/2,
+        y=config.SCREEN_SIZE[1]/2
+        )
     bacground.scale(config.SCREEN_SIZE)
     bacground.draw(screen)
     # if len(scores) > 1:
     throw_list = '-'.join(scores)
     final_score = sum([int(i) for i in scores])
-    throw_history = game_objects.Texts(config.SC_FONT, "{} = {}".format(throw_list, final_score), 60, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2) )
+    throw_history = game_objects.Texts(
+        config.SC_FONT,
+        "{} = {}".format(throw_list, final_score),
+        size=60,
+        color=config.UI_WHITE,
+        xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2)
+        )
     throw_history.draw(screen)
     display.update()
     skip = False
@@ -221,5 +303,4 @@ def interm_screen(screen, config, throw_number, scores):
         sleep(5)
 
 def end_screen():
-    # final_throws = game_objects.Texts(config.RUBIK_FONT, "START", 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] - 70) )
     pass

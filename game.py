@@ -39,30 +39,30 @@ button_exit = game_objects.Texts(
 text_credits = game_objects.Texts(
     config.RUBIK_FONT,
     "(c) 2020 JValtteri",
-    20,
-    (205,205,205),
-    (30, config.SCREEN_SIZE[1] - 30 )
+    size=20,
+    color=(205,205,205),
+    xy=(30, config.SCREEN_SIZE[1] - 30 )
     )
 button_fullscreen = game_objects.Texts(
     config.RUBIK_FONT,
     'Fullscreen',
-    40,
-    config.UI_WHITE,
-    (config.SCREEN_SIZE[0] / 2,  config.SCREEN_SIZE[1] / 2 - 44 )
+    size=40,
+    color=config.UI_WHITE,
+    xy=(config.SCREEN_SIZE[0] / 2,  config.SCREEN_SIZE[1] / 2 - 44 )
     )
 text_highscore = game_objects.Texts(
     config.RUBIK_FONT,
     'Highscore: {}'.format(high_score),
-    40,
-    config.UI_WHITE,
-    (config.SCREEN_SIZE[0] / 2,  70 )
+    size=40,
+    color=config.UI_WHITE,
+    xy=(config.SCREEN_SIZE[0] / 2,  70 )
     )
 text_score = game_objects.Texts(
     config.RUBIK_FONT,
     'Score: X',
     40,
-    config.UI_WHITE,
-    (config.SCREEN_SIZE[0] / 2,  70 )
+    color=config.UI_WHITE,
+    xy=(config.SCREEN_SIZE[0] / 2,  70 )
     )
 
 # DEFINE ACTORS
@@ -97,7 +97,11 @@ def load_track(track_number=0, hole_number=0):
     track_data = {}
     track_data["is_track"] = False        # Status code to signal succass or failure
     try:
-        f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
+        f = open( os.path.join(
+            config.TRACK_PATH,
+            "track_{}".format(track_number),
+            "track"),
+            'r' )
         holes = f.readlines()
 
         track_data["total_holes"] = len(holes)
@@ -140,7 +144,10 @@ def drag(turn, disk):
     if disk.v < 2:
         disk.v -= config.DRAG * config.MAX_POWER
     disk.v -= config.DRAG * disk.v
-    mod_vector = vector_modifier(( disk.u_vect, (disk.u_vect[1] * turn, -disk.u_vect[0] * turn) ))
+    mod_vector = vector_modifier((
+        disk.u_vect,
+        (disk.u_vect[1] * turn, -disk.u_vect[0] * turn)
+        ))
     disk.u_vector(mod_vector)
     turn += config.TURN * 0.01
     return turn
@@ -187,7 +194,10 @@ def check_tree_collision(disk, trees):
     collision_vector = None
     for tree in trees:
         if disk.rect.collidepoint((tree.x, tree.y)):
-            collision_vector = game_objects.vector((tree.x, tree.y), (disk.x, disk.y))
+            collision_vector = game_objects.vector(
+                (tree.x, tree.y),
+                (disk.x, disk.y)
+                )
             break
     return collision_vector
 
@@ -201,13 +211,16 @@ def kick(disk, collision_vector):
     return new_vect
 
 def play(track_data):
-    # Track objects
+    # TRACK OBJECTS
     track = game_objects.Object(
         config.TRACK,
-        path=os.path.join(config.TRACK_PATH, "track_{}".format(track_number)))
+        path = os.path.join(config.TRACK_PATH, "track_{}".format(track_number)))
     track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
     track.pos(track_data["track"][0], track_data["track"][1])
-    disk = game_objects.Object(config.DISK, colorkey=config.BLUE)
+    disk = game_objects.Object(
+        config.DISK,
+        colorkey=config.BLUE
+        )
     disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
     disk.pos(track_data["disk"][0], track_data["disk"][1])    #(396, 574)
     basket = game_objects.Object(
@@ -360,7 +373,6 @@ if __name__ == "__main__":
                 if track_data["is_track"] == True:
                     # START GAME
                     throw_number = play(track_data)
-                    print("throws: {}".format(throw_number))     # debug
                     scores.append(str(throw_number))
                     menu.interm_screen(screen, config, throw_number, scores)
                 hole_number += 1
