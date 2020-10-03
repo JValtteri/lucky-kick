@@ -22,26 +22,75 @@ clock = pygame.time.Clock()
 high_score = None
 
 # TEXTS
-button_start = game_objects.Texts(config.RUBIK_FONT, "START", 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] - 70) )
-button_exit = game_objects.Texts(config.RUBIK_FONT, "Exit", 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2 + 200, config.SCREEN_SIZE[1] - 70 ) )
-text_credits = game_objects.Texts(config.RUBIK_FONT, "(c) 2020 JValtteri", 20, (205,205,205), (30, config.SCREEN_SIZE[1] - 30 ) )
-button_fullscreen = game_objects.Texts(config.RUBIK_FONT, 'Fullscreen', 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2,  config.SCREEN_SIZE[1] / 2 - 44 ) )
-text_highscore = game_objects.Texts(config.RUBIK_FONT, 'Highscore: {}'.format(high_score), 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2,  70 ) )
-text_score = game_objects.Texts(config.RUBIK_FONT, 'Score: X', 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2,  70 ) )
+button_start = game_objects.Texts(
+    config.RUBIK_FONT,
+    "START",
+    size=40,
+    color=config.UI_WHITE,
+    xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] - 70)
+    )
+button_exit = game_objects.Texts(
+    config.RUBIK_FONT,
+    "Exit",
+    size=40,
+    color=config.UI_WHITE,
+    xy=(config.SCREEN_SIZE[0] / 2 + 200, config.SCREEN_SIZE[1] - 70 )
+    )
+text_credits = game_objects.Texts(
+    config.RUBIK_FONT,
+    "(c) 2020 JValtteri",
+    20,
+    (205,205,205),
+    (30, config.SCREEN_SIZE[1] - 30 )
+    )
+button_fullscreen = game_objects.Texts(
+    config.RUBIK_FONT,
+    'Fullscreen',
+    40,
+    config.UI_WHITE,
+    (config.SCREEN_SIZE[0] / 2,  config.SCREEN_SIZE[1] / 2 - 44 )
+    )
+text_highscore = game_objects.Texts(
+    config.RUBIK_FONT,
+    'Highscore: {}'.format(high_score),
+    40,
+    config.UI_WHITE,
+    (config.SCREEN_SIZE[0] / 2,  70 )
+    )
+text_score = game_objects.Texts(
+    config.RUBIK_FONT,
+    'Score: X',
+    40,
+    config.UI_WHITE,
+    (config.SCREEN_SIZE[0] / 2,  70 )
+    )
 
 # DEFINE ACTORS
 #
 # Background
-bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+bacground = game_objects.Object(
+    config.BACKGROUND,
+    x=config.SCREEN_SIZE[0]/2,
+    y=config.SCREEN_SIZE[1]/2)
 bacground.scale(config.SCREEN_SIZE)
 #
 # UI objects
-power_scale = game_objects.Object(config.P_SCALE, x=config.SCREEN_SIZE[0]-20, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
+power_scale = game_objects.Object(
+    config.P_SCALE,
+    x=config.SCREEN_SIZE[0]-20,
+    y=config.SCREEN_SIZE[1]-60,
+    colorkey=config.BLUE
+    )
 power_scale.rect.bottomright = (config.SCREEN_SIZE[0]-20, config.SCREEN_SIZE[1]-20)
 power_bar = game_objects.Object(config.BAR)
 power_bar.scale((32,1))
 power_bar.rect.bottomright = (config.SCREEN_SIZE[0]-40, config.SCREEN_SIZE[1]-20)
-turn_indicator = game_objects.Object(config.TURN_INDICATOR, x=config.SCREEN_SIZE[0]-120, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
+turn_indicator = game_objects.Object(
+    config.TURN_INDICATOR,
+    x=config.SCREEN_SIZE[0]-120,
+    y=config.SCREEN_SIZE[1]-60,
+    colorkey=config.BLUE
+    )
 
 def load_track(track_number=0, hole_number=0):
     print("hole_number: {}".format(hole_number))
@@ -168,7 +217,12 @@ def play(track_data):
     basket.draw(screen)
     trees = []
     for tree_xy in track_data["trees"]:
-        trees.append(game_objects.Object(config.TREE, x=tree_xy[0], y=tree_xy[1], colorkey=config.BLUE))
+        trees.append(game_objects.Object(
+            config.TREE,
+            x=tree_xy[0],
+            y=tree_xy[1],
+            colorkey=config.BLUE
+            ))
         trees[-1].scale(( round(trees[-1].asset_size[0]//1.5), round(trees[-1].asset_size[0]//1.5) ))
 
     scored = False
@@ -313,7 +367,9 @@ if __name__ == "__main__":
             track_number = menu.track_menu(screen, clock, config)
             track_data = load_track(track_number, 0)
             if track_data["is_track"] == True:
-                track_number = menu.track_menu(screen, clock, config, max_number=track_data["total_holes"]+1)
+                track_number = menu.track_menu(
+                    screen, clock, config,
+                    max_number=track_data["total_holes"]+1)
                 editor.editor(screen, config, track_number, hole_number)
             elif track_data["is_track"] == False:
                 print("New Track")
