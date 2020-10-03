@@ -344,7 +344,7 @@ if __name__ == "__main__":
 
         if mode == 0:
             # PLAY MODE
-            while hole_number < total_holes:
+            while hole_number <= total_holes:
                 print("holenumber: {}, total holes: {}".format(
                     hole_number,
                     total_holes
@@ -358,6 +358,7 @@ if __name__ == "__main__":
                     track_data["trees"]
                     ))
                 if track_data["is_track"] == True:
+                    # START GAME
                     throw_number = play(track_data)
                     print("throws: {}".format(throw_number))     # debug
                     scores.append(str(throw_number))
