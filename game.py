@@ -241,6 +241,10 @@ def play(track_data):
             ))
         trees[-1].scale(( round(trees[-1].asset_size[0]//1.5), round(trees[-1].asset_size[0]//1.5) ))
 
+    # UI REFRESH
+    power_bar.scale((32,1))
+    turn_indicator.rotate((-math.tan(math.radians(0)), -1 ))
+
     scored = False
     running = True
     charging = False
@@ -327,7 +331,7 @@ def play(track_data):
                 # START CHARGING FOR THROW
                 charging = True
 
-            if event.type == pygame.MOUSEBUTTONUP and disk.v == 0:
+            if event.type == pygame.MOUSEBUTTONUP and disk.v == 0 and charging:
                 # THROW HAPPENS WHEN MOUSE IS RELEACED
                 # AND
                 # DISK IS STATIONARY
