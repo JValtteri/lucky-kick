@@ -129,19 +129,16 @@ def save_changes(config, track_number, hole_number, new_lane, track_path):
     else:
         # IF THE LANE IS NEW
         holes.append(new_lane)
+    # SAVE
+    holes = '\n'.join(holes)
     save_track(holes, track_path)
-    
 
 
 def load_track(config, track_number=0, hole_number=0):
     print("hole_number: {}".format(hole_number))
-    code = False        # Status code to signal succass or failure
     try:
         f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
         holes = f.readlines()
-        total_holes = len(holes)
-        hole = holes[hole_number]
-        print(hole)     # DEBUG
         f.close()
         return holes
     except FileNotFoundError:

@@ -102,7 +102,10 @@ def load_track(track_number=0, hole_number=0):
 
         track_data["total_holes"] = len(holes)
 
-        hole = holes[hole_number].split(' ')
+        try:
+            hole = holes[hole_number].split(' ')
+        except IndexError:
+            print("Track file is EMPTY")
         print(hole)     # DEBUG
         track_data["par"] = int(hole.pop(0))
 
@@ -369,7 +372,7 @@ if __name__ == "__main__":
             track_data = load_track(track_number, 0)
             if track_data["is_track"] == True:
                 # OLD TRACK: NEW/EDIT LANES
-                track_number = menu.track_menu(
+                hole_number = menu.track_menu(
                     screen, clock, config,
                     max_number = track_data["total_holes"] + 1
                     )
