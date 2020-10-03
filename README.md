@@ -1,7 +1,7 @@
 # "Lucky-Kick" Frisbee-Golf
-This will be a top down frisbee-golf game made with PyGame and Python3
+A top down frisbee-golf game made with PyGame and Python3
 
-### PRE-ALPHA ###
+### ALPHA ###
 
 ## Features
 - Frisbee turn
@@ -11,6 +11,8 @@ This will be a top down frisbee-golf game made with PyGame and Python3
 - Throw power
 - Level editor
 - Move Camera
+- Branches slow disk
+- score cards
 
 ## Planned Features ##
 
@@ -24,19 +26,18 @@ Subject to my whims.
 - ~Hiser & Unhiser~
 - Fore & Backhand
 - Throw accuracy ~improvement as character "learns"~
-- Menu
+- ~Menu~
 - ~Level editor~
 - ~Move Camera~
-- Camera re-center
 
 ### Second Wave ###
-- score cards
+- ~score cards~
 - wind
 - Sounds
   - score *chink*
   - branches
   - kick
-- Branches slow disk
+- ~Branches slow disk~
 - Adjustable resolution
 
 ### Third Wave ###
