@@ -22,48 +22,106 @@ clock = pygame.time.Clock()
 high_score = None
 
 # TEXTS
-button_start = game_objects.Texts(config.RUBIK_FONT, "START", 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] - 70) )
-button_exit = game_objects.Texts(config.RUBIK_FONT, "Exit", 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2 + 200, config.SCREEN_SIZE[1] - 70 ) )
-text_credits = game_objects.Texts(config.RUBIK_FONT, "(c) 2020 JValtteri", 20, (205,205,205), (30, config.SCREEN_SIZE[1] - 30 ) )
-button_fullscreen = game_objects.Texts(config.RUBIK_FONT, 'Fullscreen', 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2,  config.SCREEN_SIZE[1] / 2 - 44 ) )
-text_highscore = game_objects.Texts(config.RUBIK_FONT, 'Highscore: {}'.format(high_score), 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2,  70 ) )
-text_score = game_objects.Texts(config.RUBIK_FONT, 'Score: X', 40, config.UI_WHITE, (config.SCREEN_SIZE[0] / 2,  70 ) )
+button_start = game_objects.Texts(
+    config.RUBIK_FONT,
+    "START",
+    size=40,
+    color=config.UI_WHITE,
+    xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] - 70)
+    )
+button_exit = game_objects.Texts(
+    config.RUBIK_FONT,
+    "Exit",
+    size=40,
+    color=config.UI_WHITE,
+    xy=(config.SCREEN_SIZE[0] / 2 + 200, config.SCREEN_SIZE[1] - 70 )
+    )
+text_credits = game_objects.Texts(
+    config.RUBIK_FONT,
+    "(c) 2020 JValtteri",
+    20,
+    (205,205,205),
+    (30, config.SCREEN_SIZE[1] - 30 )
+    )
+button_fullscreen = game_objects.Texts(
+    config.RUBIK_FONT,
+    'Fullscreen',
+    40,
+    config.UI_WHITE,
+    (config.SCREEN_SIZE[0] / 2,  config.SCREEN_SIZE[1] / 2 - 44 )
+    )
+text_highscore = game_objects.Texts(
+    config.RUBIK_FONT,
+    'Highscore: {}'.format(high_score),
+    40,
+    config.UI_WHITE,
+    (config.SCREEN_SIZE[0] / 2,  70 )
+    )
+text_score = game_objects.Texts(
+    config.RUBIK_FONT,
+    'Score: X',
+    40,
+    config.UI_WHITE,
+    (config.SCREEN_SIZE[0] / 2,  70 )
+    )
 
 # DEFINE ACTORS
 #
 # Background
-bacground = game_objects.Object(config.BACKGROUND, x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+bacground = game_objects.Object(
+    config.BACKGROUND,
+    x=config.SCREEN_SIZE[0]/2,
+    y=config.SCREEN_SIZE[1]/2)
 bacground.scale(config.SCREEN_SIZE)
 #
 # UI objects
-power_scale = game_objects.Object(config.P_SCALE, x=config.SCREEN_SIZE[0]-20, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
+power_scale = game_objects.Object(
+    config.P_SCALE,
+    x=config.SCREEN_SIZE[0]-20,
+    y=config.SCREEN_SIZE[1]-60,
+    colorkey=config.BLUE
+    )
 power_scale.rect.bottomright = (config.SCREEN_SIZE[0]-20, config.SCREEN_SIZE[1]-20)
 power_bar = game_objects.Object(config.BAR)
 power_bar.scale((32,1))
 power_bar.rect.bottomright = (config.SCREEN_SIZE[0]-40, config.SCREEN_SIZE[1]-20)
-turn_indicator = game_objects.Object(config.TURN_INDICATOR, x=config.SCREEN_SIZE[0]-120, y=config.SCREEN_SIZE[1]-60, colorkey=config.BLUE)
+turn_indicator = game_objects.Object(
+    config.TURN_INDICATOR,
+    x=config.SCREEN_SIZE[0]-120,
+    y=config.SCREEN_SIZE[1]-60,
+    colorkey=config.BLUE
+    )
 
 def load_track(track_number=0, hole_number=0):
     print("hole_number: {}".format(hole_number))
-    code = 0        # Status code to signal succass or failure
-    f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
-    holes = f.readlines()
+    track_data = {}
+    track_data["is_track"] = False        # Status code to signal succass or failure
+    try:
+        f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
+        holes = f.readlines()
 
-    total_holes = len(holes)
+        track_data["total_holes"] = len(holes)
 
-    hole = holes[hole_number].split(' ')
-    print(hole)     # DEBUG
-    par = int(hole.pop(0))
+        try:
+            hole = holes[hole_number].split(' ')
+        except IndexError:
+            print("Track file is EMPTY")
+        print(hole)     # DEBUG
+        track_data["par"] = int(hole.pop(0))
 
-    track = [float(hole.pop(0)), float(hole.pop(0))]
-    disk = [float(hole.pop(0)), float(hole.pop(0))]
-    basket = [float(hole.pop(0)), float(hole.pop(0))]
-    trees = []
-    f.close()
-    # for _ in hole:
-    while hole != []:
-        trees.append( [ float(hole.pop(0)), float(hole.pop(0)) ] )
-    return par, track, disk, basket, trees, total_holes, code
+        track_data["track"] = [float(hole.pop(0)), float(hole.pop(0))]
+        track_data["disk"] = [float(hole.pop(0)), float(hole.pop(0))]
+        track_data["basket"] = [float(hole.pop(0)), float(hole.pop(0))]
+        track_data["trees"] = []
+        f.close()
+        # for _ in hole:
+        while hole != []:
+            track_data["trees"].append( [ float(hole.pop(0)), float(hole.pop(0)) ] )
+        track_data["is_track"] = True
+    except FileNotFoundError:
+        track_data["total_holes"] = 0
+        return track_data
+    return track_data
 
 def throw_disk(power, vector, disk):
     disk.speed(power)
@@ -142,20 +200,32 @@ def kick(disk, collision_vector):
     new_vect = (1, math.tan(new_angle))
     return new_vect
 
-def play():
+def play(track_data):
     # Track objects
-    track = game_objects.Object(config.TRACK, path=os.path.join(config.TRACK_PATH, "track_{}".format(track_number)))
+    track = game_objects.Object(
+        config.TRACK,
+        path=os.path.join(config.TRACK_PATH, "track_{}".format(track_number)))
     track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
-    track.pos(track_xy[0], track_xy[1])   #(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+    track.pos(track_data["track"][0], track_data["track"][1])
     disk = game_objects.Object(config.DISK, colorkey=config.BLUE)
     disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
-    disk.pos(disk_xy[0], disk_xy[1])    #(396, 574)
-    basket = game_objects.Object(config.BASKET, x=basket_xy[0], y=basket_xy[1], colorkey=config.BLUE)
+    disk.pos(track_data["disk"][0], track_data["disk"][1])    #(396, 574)
+    basket = game_objects.Object(
+        config.BASKET,
+        x=track_data["basket"][0],
+        y=track_data["basket"][1],
+        colorkey=config.BLUE
+        )
     basket.scale((64, 64))
     basket.draw(screen)
     trees = []
-    for tree_xy in trees_xy:
-        trees.append(game_objects.Object(config.TREE, x=tree_xy[0], y=tree_xy[1], colorkey=config.BLUE))
+    for tree_xy in track_data["trees"]:
+        trees.append(game_objects.Object(
+            config.TREE,
+            x=tree_xy[0],
+            y=tree_xy[1],
+            colorkey=config.BLUE
+            ))
         trees[-1].scale(( round(trees[-1].asset_size[0]//1.5), round(trees[-1].asset_size[0]//1.5) ))
 
     scored = False
@@ -273,18 +343,48 @@ if __name__ == "__main__":
         scores = []
 
         if mode == 0:
-            while hole_number < total_holes:
-                print("holenumber: {}, total holes: {}".format(hole_number, total_holes))
-                par, track_xy, disk_xy, basket_xy, trees_xy, total_holes, code = load_track(track_number, hole_number)
-                print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
-                throw_number = play()
-                print("throws: {}".format(throw_number))     # debug
-                scores.append(str(throw_number))
-                menu.interm_screen(screen, config, throw_number, scores)
+            # PLAY MODE
+            while hole_number <= total_holes:
+                print("holenumber: {}, total holes: {}".format(
+                    hole_number,
+                    total_holes
+                    ))
+                track_data = load_track(track_number, hole_number)
+                print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(
+                    track_data["par"],
+                    track_data["track"],
+                    track_data["disk"],
+                    track_data["basket"],
+                    track_data["trees"]
+                    ))
+                if track_data["is_track"] == True:
+                    # START GAME
+                    throw_number = play(track_data)
+                    print("throws: {}".format(throw_number))     # debug
+                    scores.append(str(throw_number))
+                    menu.interm_screen(screen, config, throw_number, scores)
                 hole_number += 1
             menu.end_screen()
 
-        elif mode == 1:
-            editor.editor(screen, config, track_number, hole_number)
+        elif mode == 16:
+            # EDITOR MODE
+            # Check if the track exists
+            track_number = menu.track_menu(screen, clock, config)
+            track_data = load_track(track_number, 0)
+            if track_data["is_track"] == True:
+                # OLD TRACK: NEW/EDIT LANES
+                hole_number = menu.track_menu(
+                    screen, clock, config,
+                    max_number = track_data["total_holes"] + 1
+                    )
+                track_path = os.path.join(config.TRACK_PATH, "track_{}".format(track_number))
+                new_lane = editor.editor(screen, config, track_number, hole_number)
+                editor.save_changes(config, track_number, hole_number, new_lane, track_path)
+            elif track_data["is_track"] == False:
+                # NEW TRACK
+                print("New Track")
+                track_path = os.path.join(config.TRACK_PATH, "track_{}".format(track_number))
+                new_track = editor.editor(screen, config, track_number, 1)
+                editor.save_track(track_data, track_path)
         else:
             break

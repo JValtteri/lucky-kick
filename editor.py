@@ -111,27 +111,39 @@ def editor(screen, config, track_number, hole_number=0):
         track_data.append(str(tree.y))
 
     print(track_data)
-    save_track(track_data, track_path)
+    track_data = ' '.join(track_data)
+    return track_data
+
 
 def save_track(track_data, track_path):
     f = open(os.path.join(track_path, "track"), 'w')
-    f.write(' '.join(track_data))
+    f.write(track_data)
     f.close()
 
 
-def load_track(name="track_0", hole_number=0):
-    f = open( os.path.join(config.TRACK_PATH, name, "track") ,'r' )
-    holes = f.readlines()
-    hole = holes[hole_number].split(' ')
-    par = int(hole.pop(0))
-    track = [int(i) for i in hole.pop(0).split(':', 1)]
-    disk = [int(i) for i in hole.pop(0).split(':', 1)]
-    basket = [int(i) for i in hole.pop(0).split(':', 1)]
-    trees = []
-    f.close()
-    for _ in hole:
-        trees.append( [int(i) for i in hole.pop(0).split(':')] )
-    return par, track, disk, basket, trees
+def save_changes(config, track_number, hole_number, new_lane, track_path):
+    holes = load_track(config, track_number, hole_number)
+    if hole_number - 1 in range(len(holes)):
+        # IF EDITING EXISTING LANE
+        holes[hole_number - 1] = new_lane
+    else:
+        # IF THE LANE IS NEW
+        holes.append(new_lane)
+    # SAVE
+    holes = '\n'.join(holes)
+    save_track(holes, track_path)
+
+
+def load_track(config, track_number=0, hole_number=0):
+    print("hole_number: {}".format(hole_number))
+    try:
+        f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
+        holes = f.readlines()
+        f.close()
+        return holes
+    except FileNotFoundError:
+        return []
+
 
 def camera_move(entities, trees, dx=0, dy=0):
     # BUILD A LIST OF ENTITIES TO MOVE
@@ -142,6 +154,7 @@ def camera_move(entities, trees, dx=0, dy=0):
     for entity in entities:
         entity.move_x(-dx)
         entity.move_y(-dy)
+
 
 def camera_keys(entities, trees):
     keys = pygame.key.get_pressed()

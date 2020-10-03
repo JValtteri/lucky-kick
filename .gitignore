@@ -5,3 +5,4 @@ build/*
 *.spec
 high_score
 aird-venv/*
+*copy
