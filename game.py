@@ -45,30 +45,31 @@ turn_indicator = game_objects.Object(config.TURN_INDICATOR, x=config.SCREEN_SIZE
 
 def load_track(track_number=0, hole_number=0):
     print("hole_number: {}".format(hole_number))
-    code = False        # Status code to signal succass or failure
+    track_data = {}
+    track_data["is_track"] = False        # Status code to signal succass or failure
     try:
         f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
         holes = f.readlines()
 
-        total_holes = len(holes)
+        track_data["total_holes"] = len(holes)
 
         hole = holes[hole_number].split(' ')
         print(hole)     # DEBUG
-        par = int(hole.pop(0))
+        track_data["par"] = int(hole.pop(0))
 
-        track = [float(hole.pop(0)), float(hole.pop(0))]
-        disk = [float(hole.pop(0)), float(hole.pop(0))]
-        basket = [float(hole.pop(0)), float(hole.pop(0))]
-        trees = []
+        track_data["track"] = [float(hole.pop(0)), float(hole.pop(0))]
+        track_data["disk"] = [float(hole.pop(0)), float(hole.pop(0))]
+        track_data["basket"] = [float(hole.pop(0)), float(hole.pop(0))]
+        track_data["trees"] = []
         f.close()
         # for _ in hole:
         while hole != []:
-            trees.append( [ float(hole.pop(0)), float(hole.pop(0)) ] )
-        code = True
+            track_data["trees"].append( [ float(hole.pop(0)), float(hole.pop(0)) ] )
+        track_data["is_track"] = True
     except FileNotFoundError:
-        total_holes = 0
-        return None, None, None, None, None, total_holes, code
-    return par, track, disk, basket, trees, total_holes, code
+        track_data["total_holes"] = 0
+        return track_data
+    return track_data
 
 def throw_disk(power, vector, disk):
     disk.speed(power)
@@ -147,19 +148,26 @@ def kick(disk, collision_vector):
     new_vect = (1, math.tan(new_angle))
     return new_vect
 
-def play():
+def play(track_data):
     # Track objects
-    track = game_objects.Object(config.TRACK, path=os.path.join(config.TRACK_PATH, "track_{}".format(track_number)))
+    track = game_objects.Object(
+        config.TRACK,
+        path=os.path.join(config.TRACK_PATH, "track_{}".format(track_number)))
     track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
-    track.pos(track_xy[0], track_xy[1])   #(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+    track.pos(track_data["track"][0], track_data["track"][1])
     disk = game_objects.Object(config.DISK, colorkey=config.BLUE)
     disk.scale((disk.asset_size[0]//2, disk.asset_size[1]//2))
-    disk.pos(disk_xy[0], disk_xy[1])    #(396, 574)
-    basket = game_objects.Object(config.BASKET, x=basket_xy[0], y=basket_xy[1], colorkey=config.BLUE)
+    disk.pos(track_data["disk"][0], track_data["disk"][1])    #(396, 574)
+    basket = game_objects.Object(
+        config.BASKET,
+        x=track_data["basket"][0],
+        y=track_data["basket"][1],
+        colorkey=config.BLUE
+        )
     basket.scale((64, 64))
     basket.draw(screen)
     trees = []
-    for tree_xy in trees_xy:
+    for tree_xy in track_data["trees"]:
         trees.append(game_objects.Object(config.TREE, x=tree_xy[0], y=tree_xy[1], colorkey=config.BLUE))
         trees[-1].scale(( round(trees[-1].asset_size[0]//1.5), round(trees[-1].asset_size[0]//1.5) ))
 
@@ -278,12 +286,22 @@ if __name__ == "__main__":
         scores = []
 
         if mode == 0:
+            # PLAY MODE
             while hole_number < total_holes:
-                print("holenumber: {}, total holes: {}".format(hole_number, total_holes))
-                par, track_xy, disk_xy, basket_xy, trees_xy, total_holes, code = load_track(track_number, hole_number)
-                print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(par, track_xy, disk_xy, basket_xy, trees_xy))
-                if code == True:
-                    throw_number = play()
+                print("holenumber: {}, total holes: {}".format(
+                    hole_number,
+                    total_holes
+                    ))
+                track_data = load_track(track_number, hole_number)
+                print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(
+                    track_data["par"],
+                    track_data["track"],
+                    track_data["disk"],
+                    track_data["basket"],
+                    track_data["trees"]
+                    ))
+                if track_data["is_track"] == True:
+                    throw_number = play(track_data)
                     print("throws: {}".format(throw_number))     # debug
                     scores.append(str(throw_number))
                     menu.interm_screen(screen, config, throw_number, scores)
@@ -291,12 +309,13 @@ if __name__ == "__main__":
             menu.end_screen()
 
         elif mode == 16:
+            # EDITOR MODE
             track_number = menu.track_menu(screen, clock, config)
-            _, _, _, _, _, total_holes, code = load_track(track_number, 0)
-            if code == True:
-                track_number = menu.track_menu(screen, clock, config, max_number=total_holes+1)
+            track_data = load_track(track_number, 0)
+            if track_data["is_track"] == True:
+                track_number = menu.track_menu(screen, clock, config, max_number=track_data["total_holes"]+1)
                 editor.editor(screen, config, track_number, hole_number)
-            elif code == False:
+            elif track_data["is_track"] == False:
                 print("New Track")
                 editor.editor(screen, config, track_number, 1)
         else:
