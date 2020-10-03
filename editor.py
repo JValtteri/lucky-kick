@@ -111,12 +111,26 @@ def editor(screen, config, track_number, hole_number=0):
         track_data.append(str(tree.y))
 
     print(track_data)
-    save_track(track_data, track_path)
+    track_data = ' '.join(track_data)
+    return track_data
+
 
 def save_track(track_data, track_path):
     f = open(os.path.join(track_path, "track"), 'w')
-    f.write(' '.join(track_data))
+    f.write(track_data)
     f.close()
+
+
+def save_changes(config, track_number, hole_number, new_lane, track_path):
+    holes = load_track(config, track_number, hole_number)
+    if hole_number - 1 in range(len(holes)):
+        # IF EDITING EXISTING LANE
+        holes[hole_number - 1] = new_lane
+    else:
+        # IF THE LANE IS NEW
+        holes.append(new_lane)
+    save_track(holes, track_path)
+    
 
 
 def load_track(config, track_number=0, hole_number=0):
@@ -125,18 +139,13 @@ def load_track(config, track_number=0, hole_number=0):
     try:
         f = open( os.path.join(config.TRACK_PATH, "track_{}".format(track_number), "track") ,'r' )
         holes = f.readlines()
-
         total_holes = len(holes)
-
         hole = holes[hole_number]
         print(hole)     # DEBUG
         f.close()
-        # for _ in hole:
-        code = True
+        return holes
     except FileNotFoundError:
-        total_holes = 0
-        return [], [], 0, total_holes, code
-    return holes, hole, total_holes, code
+        return []
 
 
 def camera_move(entities, trees, dx=0, dy=0):
@@ -148,6 +157,7 @@ def camera_move(entities, trees, dx=0, dy=0):
     for entity in entities:
         entity.move_x(-dx)
         entity.move_y(-dy)
+
 
 def camera_keys(entities, trees):
     keys = pygame.key.get_pressed()

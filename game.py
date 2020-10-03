@@ -364,15 +364,23 @@ if __name__ == "__main__":
 
         elif mode == 16:
             # EDITOR MODE
+            # Check if the track exists
             track_number = menu.track_menu(screen, clock, config)
             track_data = load_track(track_number, 0)
             if track_data["is_track"] == True:
+                # OLD TRACK: NEW/EDIT LANES
                 track_number = menu.track_menu(
                     screen, clock, config,
-                    max_number=track_data["total_holes"]+1)
-                editor.editor(screen, config, track_number, hole_number)
+                    max_number = track_data["total_holes"] + 1
+                    )
+                track_path = os.path.join(config.TRACK_PATH, "track_{}".format(track_number))
+                new_lane = editor.editor(screen, config, track_number, hole_number)
+                editor.save_changes(config, track_number, hole_number, new_lane, track_path)
             elif track_data["is_track"] == False:
+                # NEW TRACK
                 print("New Track")
-                editor.editor(screen, config, track_number, 1)
+                track_path = os.path.join(config.TRACK_PATH, "track_{}".format(track_number))
+                new_track = editor.editor(screen, config, track_number, 1)
+                editor.save_track(track_data, track_path)
         else:
             break
