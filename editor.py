@@ -43,6 +43,7 @@ def editor(screen, config, track_number, hole_number=0):
                                 ):
                     save = True
 
+
             ### DISK
             if disk_placed == False:
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -128,7 +129,7 @@ def save_changes(config, track_number, hole_number, new_lane, track_path):
         holes[hole_number] = new_lane.rstrip("\n")
     else:
         # IF THE LANE IS NEW
-        holes.append(new_lane)
+        holes.append("\n"+new_lane)
     # SAVE
     holes = ''.join(holes)
     save_track(holes, track_path)
