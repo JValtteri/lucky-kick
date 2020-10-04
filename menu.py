@@ -6,7 +6,7 @@ from game import load_track
 import webbrowser
 import sys
 import os
-from time import sleep
+from time import sleep, time
 
 
 def menu(screen, clock, config):
@@ -185,7 +185,7 @@ def track_menu(screen, clock, config, title='', max_number=10):
     title_text = game_objects.Texts(
         config.RUBIK_FONT,
         message=title,
-        size=40,
+        size=70,
         xy=( config.SCREEN_SIZE[0] / 2, 100 )
         )
     font_size = 60
@@ -267,6 +267,7 @@ def interm_screen(screen, clock, config, throw_number, scores):
     bacground.scale(config.SCREEN_SIZE)
     state = 0
     stay = True
+    start_time = time()
     while stay:
         skip = False
         if state == 0:
@@ -286,7 +287,7 @@ def interm_screen(screen, clock, config, throw_number, scores):
             final_score = sum([int(i) for i in scores])
             throw_history = game_objects.Texts(
                 config.SC_FONT,
-                "{} || {}".format(throw_list, final_score),
+                "{} = {}".format(throw_list, final_score),
                 size=60,
                 color=config.UI_WHITE,
                 xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2)
@@ -311,6 +312,11 @@ def interm_screen(screen, clock, config, throw_number, scores):
             # MOUSE CLICK
             if event.type == pygame.MOUSEBUTTONDOWN:
                 skip = True
+
+        time_now = time()
+        if time_now - start_time >= 3:
+            start_time = time()
+            state = 1
 
         if skip == True:
             state += 1
