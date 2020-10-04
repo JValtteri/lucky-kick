@@ -29,12 +29,14 @@ class Config():
         self.RUBIK_FONT = 'Rubik-Regular.ttf'
 
         self.HIGH_SCORE = 0
+        self.CAMERA_SPEED = 6
 
         # DISK PROPERTIES
         self.MAX_POWER = 5
         self.DRAG = 0.00417    # 0.025
         self.TURN = 0.004
 
+        # COLORS
         self.BLUE = (63,72,204)
         self.BLACK = (0,0,0)
         self.WHITE = (255,255,255)

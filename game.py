@@ -281,14 +281,14 @@ def play(track_data):
         # CHECK PRESSED KEYS
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
-            camera_move(track, basket, disk, trees, dy=-4)
+            camera_move(track, basket, disk, trees, dy=-config.CAMERA_SPEED)
         elif keys[pygame.K_s]:
-            camera_move(track, basket, disk, trees, dy=4)
+            camera_move(track, basket, disk, trees, dy=config.CAMERA_SPEED)
 
         if keys[pygame.K_a]:
-            camera_move(track, basket, disk, trees, dx=-4)
+            camera_move(track, basket, disk, trees, dx=-config.CAMERA_SPEED)
         elif keys[pygame.K_d]:
-            camera_move(track, basket, disk, trees, dx=4)
+            camera_move(track, basket, disk, trees, dx=config.CAMERA_SPEED)
 
         if keys[pygame.K_RIGHT]:
             if angle > -90:

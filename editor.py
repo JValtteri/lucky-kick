@@ -92,7 +92,7 @@ def editor(screen, config, track_number, hole_number=0):
                 tree.draw(screen)
 
         # CAMERA MOVE
-        camera_keys(entities, trees)
+        camera_keys(entities, trees, config)
 
         display.update()
         clock.tick(60)
@@ -156,13 +156,13 @@ def camera_move(entities, trees, dx=0, dy=0):
         entity.move_y(-dy)
 
 
-def camera_keys(entities, trees):
+def camera_keys(entities, trees, config):
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        camera_move(entities, trees, dy=-4)
+        camera_move(entities, trees, dy=-config.CAMERA_SPEED)
     elif keys[pygame.K_s]:
-        camera_move(entities, trees, dy=4)
+        camera_move(entities, trees, dy=config.CAMERA_SPEED)
     if keys[pygame.K_a]:
-        camera_move(entities, trees, dx=-4)
+        camera_move(entities, trees, dx=-config.CAMERA_SPEED)
     elif keys[pygame.K_d]:
-        camera_move(entities, trees, dx=4)
+        camera_move(entities, trees, dx=config.CAMERA_SPEED)
