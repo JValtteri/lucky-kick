@@ -1,7 +1,46 @@
 # "Lucky-Kick" Frisbee-Golf
 A top down frisbee-golf game made with PyGame and Python3
 
-### ALPHA ###
+### 0.x BETA ###
+
+![screenshot](/images/main_menu.png)
+
+## How to play ##
+
+To throw the disk, **click and drag** anywhere on the field and pull away from the disk. Further you pull from the disk, the harder the throw.
+
+You can adjust the angle in which you throw with arrow keys (Left and Right). All throws are modelled as right hand, back hand throws (or left hand fore hand throws), where the disk rotates clockwise.
+
+The disk will tend to *fade* to the left. The harde
+
+Throwing through tree branches slows the disk, and hitting the trunk will make the disk bounce off or *kick* off of the trunk.
+
+After each lane, you will a summary of the throws so far. Press **space** or **enter** to continue to the next lane.
+
+### Key Bindings ###
+
+| Action       | Key                     |
+| ------------ | ----------------------- |
+| Throw        | Any Mouse Button        |
+| Move Camera  | W, A, S, D              |
+| Throw Angle  | Left / Right arrow      |
+| Continue     | Enter / Space-Bar / Esc |
+| Exit         | Esc                     |
+
+### Disk Stats ###
+
+| Stat  | Value |
+| ----- | ----- |
+| Speed | +++   |
+| Glide | ++    |
+| Turn  | +     |
+| Fade  | +++   |
+
+## Editing and Adding New Tracks and Lanes
+
+The feature is implemented
+
+*add instructions here*
 
 ## Features
 - Frisbee turn
@@ -13,6 +52,7 @@ A top down frisbee-golf game made with PyGame and Python3
 - Move Camera
 - Branches slow disk
 - score cards
+- menu
 
 ## Planned Features ##
 
