@@ -371,8 +371,6 @@ if __name__ == "__main__":
         track_data = load_track(track_number, hole_number)
         total_holes = track_data["total_holes"]
         print("hole number {}, total holes {}".format(hole_number, total_holes))     #DEBUG
-
-        # total_holes = 1
         scores = []
 
         if mode == 0:

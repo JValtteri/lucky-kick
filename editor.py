@@ -123,14 +123,14 @@ def save_track(track_data, track_path):
 
 def save_changes(config, track_number, hole_number, new_lane, track_path):
     holes = load_track(config, track_number, hole_number)
-    if hole_number - 1 in range(len(holes)):
+    if hole_number in range(len(holes)):
         # IF EDITING EXISTING LANE
-        holes[hole_number - 1] = new_lane
+        holes[hole_number] = new_lane.rstrip("\n")
     else:
         # IF THE LANE IS NEW
         holes.append(new_lane)
     # SAVE
-    holes = '\n'.join(holes)
+    holes = ''.join(holes)
     save_track(holes, track_path)
 
 
