@@ -111,7 +111,7 @@ def load_track(track_number=0, hole_number=0):
         except IndexError:
             hole = holes
             print("Track file is EMPTY")
-        print(hole)     # DEBUG
+        # print(hole)     # DEBUG
         track_data["par"] = int(hole.pop(0))
 
         track_data["track"] = [float(hole.pop(0)), float(hole.pop(0))]
@@ -124,6 +124,7 @@ def load_track(track_number=0, hole_number=0):
             track_data["trees"].append( [ float(hole.pop(0)), float(hole.pop(0)) ] )
         track_data["is_track"] = True
     except FileNotFoundError:
+        print("File not found")
         track_data["total_holes"] = 0
         return track_data
     return track_data
@@ -366,15 +367,19 @@ if __name__ == "__main__":
 
     while True:
         track_number, hole_number, mode = menu.menu(screen, clock, config)
-        total_holes = 1
+        print("track number {}, hole number {}, mode {}".format(track_number, hole_number, mode))     #DEBUG
+        track_data = load_track(track_number, hole_number)
+        total_holes = track_data["total_holes"]
+        print("hole number {}, total holes {}".format(hole_number, total_holes))     #DEBUG
+
+        # total_holes = 1
         scores = []
 
         if mode == 0:
             # PLAY MODE
             while hole_number < total_holes:
-                print("hole number {}, total holes {}".format(hole_number, total_holes))     #DEBUG
                 track_data = load_track(track_number, hole_number)
-                total_holes = track_data["total_holes"]
+                print("is track {}".format(track_data["is_track"]))
                 if track_data["is_track"] == True:
                     # START GAME
                     throw_number = play(track_data)
