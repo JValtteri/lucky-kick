@@ -3,7 +3,7 @@ A top down frisbee-golf game made with PyGame and Python3
 
 ### 0.x BETA ###
 
-![screenshot](/images/main_menu.png)
+![screenshot](/screenshots/main_menu.png)
 
 ## How to play ##
 
