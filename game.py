@@ -109,6 +109,7 @@ def load_track(track_number=0, hole_number=0):
         try:
             hole = holes[hole_number].split(' ')
         except IndexError:
+            hole = holes
             print("Track file is EMPTY")
         print(hole)     # DEBUG
         track_data["par"] = int(hole.pop(0))
@@ -370,13 +371,15 @@ if __name__ == "__main__":
 
         if mode == 0:
             # PLAY MODE
-            while hole_number <= total_holes:
+            while hole_number < total_holes:
+                print("hole number {}, total holes {}".format(hole_number, total_holes))     #DEBUG
                 track_data = load_track(track_number, hole_number)
+                total_holes = track_data["total_holes"]
                 if track_data["is_track"] == True:
                     # START GAME
                     throw_number = play(track_data)
                     scores.append(str(throw_number))
-                    menu.interm_screen(screen, config, throw_number, scores)
+                    menu.interm_screen(screen, clock, config, throw_number, scores)
                 hole_number += 1
             menu.end_screen()
 

@@ -2,6 +2,7 @@ import pygame
 from pygame import display, mouse
 import game_objects
 from config import full_screen
+from game import load_track
 import webbrowser
 import sys
 import os
@@ -20,8 +21,14 @@ def menu(screen, clock, config):
         config.TRACK,
         path=os.path.join(config.TRACK_PATH, "track_0")
         )
-    track.scale(( round(track.asset_size[0]*2), round(track.asset_size[1]*2) ))
-    track.pos(x=config.SCREEN_SIZE[0]/2, y=config.SCREEN_SIZE[1]/2)
+    track.scale((
+        round(track.asset_size[0]*2),
+        round(track.asset_size[1]*2)
+        ))
+    track.pos(
+        x=config.SCREEN_SIZE[0]/2,
+        y=config.SCREEN_SIZE[1]/2
+        )
     highlite = game_objects.Object(
         config.HIGHLITE,
         colorkey=(163,73,164)
@@ -119,9 +126,11 @@ def menu(screen, clock, config):
                         screen, clock, config,
                         title="Choose A Track"
                         )
+                    track_data = load_track(track_number, 0)
                     hole_number = track_menu(
                         screen, clock, config,
-                        title="Choose A Lane"
+                        title = "Choose A Lane",
+                        max_number = track_data["total_holes"]
                         )
                     in_menu = False
 
@@ -249,71 +258,66 @@ def track_menu(screen, clock, config, title='', max_number=10):
 
     return track_number
 
-def interm_screen(screen, config, throw_number, scores):
-    final_throws = game_objects.Texts(
-        config.SC_FONT,
-        "Score: {}".format(throw_number),
-        size=80,
-        color=config.UI_WHITE,
-        xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2)
-        )
-    final_throws.draw(screen)
-    display.update()
-    skip = False
-    current_events = pygame.event.get()
-    for event in current_events:
-        # KEYBOARD
-        if event.type == pygame.KEYDOWN:
-            skip = True
-
-        # APP CLOSE
-        if event.type == pygame.QUIT:
-            pygame.display.quit()
-            pygame.quit()
-            sys.exit()
-
-        # MOUSE CLICK
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            skip = True
-    if skip == False:
-        sleep(3)
+def interm_screen(screen, clock, config, throw_number, scores):
     bacground = game_objects.Object(
         config.BACKGROUND,
         x=config.SCREEN_SIZE[0]/2,
         y=config.SCREEN_SIZE[1]/2
         )
     bacground.scale(config.SCREEN_SIZE)
-    bacground.draw(screen)
-    # if len(scores) > 1:
-    throw_list = ' | '.join(scores)
-    final_score = sum([int(i) for i in scores])
-    throw_history = game_objects.Texts(
-        config.SC_FONT,
-        "{} || {}".format(throw_list, final_score),
-        size=60,
-        color=config.UI_WHITE,
-        xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2)
-        )
-    throw_history.draw(screen)
-    display.update()
-    skip = False
-    current_events = pygame.event.get()
-    for event in current_events:
-        # KEYBOARD
-        if event.type == pygame.KEYDOWN:
-            skip = True
+    state = 0
+    stay = True
+    while stay:
+        skip = False
+        if state == 0:
+            final_throws = game_objects.Texts(
+                config.SC_FONT,
+                "Score: {}".format(throw_number),
+                size=80,
+                color=config.UI_WHITE,
+                xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2)
+                )
+            final_throws.draw(screen)
 
-        # APP CLOSE
-        if event.type == pygame.QUIT:
-            pygame.display.quit()
-            pygame.quit()
-            sys.exit()
+        elif state == 1:
+            bacground.draw(screen)
+            # if len(scores) > 1:
+            throw_list = ' | '.join(scores)
+            final_score = sum([int(i) for i in scores])
+            throw_history = game_objects.Texts(
+                config.SC_FONT,
+                "{} || {}".format(throw_list, final_score),
+                size=60,
+                color=config.UI_WHITE,
+                xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2)
+                )
+            throw_history.draw(screen)
 
-        # MOUSE CLICK
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            skip = True
-    if skip == False:
-        sleep(5)
+        else:
+            stay = False
+
+        current_events = pygame.event.get()
+        for event in current_events:
+            # KEYBOARD
+            if event.type == pygame.KEYDOWN:
+                skip = True
+
+            # APP CLOSE
+            if event.type == pygame.QUIT:
+                pygame.display.quit()
+                pygame.quit()
+                sys.exit()
+
+            # MOUSE CLICK
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                skip = True
+
+        if skip == True:
+            state += 1
+
+        display.update()
+        clock.tick(30)
+
 
 def end_screen():
     pass
