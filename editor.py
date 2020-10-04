@@ -107,6 +107,7 @@ def editor(screen, config, track_number, hole_number=0):
     track_data.append(str(disk.y))
     track_data.append(str(basket.x))
     track_data.append(str(basket.y))
+    del trees[-1]
     for tree in trees:
         track_data.append(str(tree.x))
         track_data.append(str(tree.y))
