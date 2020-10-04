@@ -371,18 +371,7 @@ if __name__ == "__main__":
         if mode == 0:
             # PLAY MODE
             while hole_number <= total_holes:
-                print("holenumber: {}, total holes: {}".format(
-                    hole_number,
-                    total_holes
-                    ))
                 track_data = load_track(track_number, hole_number)
-                print("par: {}, track: {}, disk: {}, basket: {}, trees: {}".format(
-                    track_data["par"],
-                    track_data["track"],
-                    track_data["disk"],
-                    track_data["basket"],
-                    track_data["trees"]
-                    ))
                 if track_data["is_track"] == True:
                     # START GAME
                     throw_number = play(track_data)
@@ -394,12 +383,13 @@ if __name__ == "__main__":
         elif mode == 16:
             # EDITOR MODE
             # Check if the track exists
-            track_number = menu.track_menu(screen, clock, config)
+            track_number = menu.track_menu(screen, clock, config, "Choose A Track")
             track_data = load_track(track_number, 0)
             if track_data["is_track"] == True:
                 # OLD TRACK: NEW/EDIT LANES
                 hole_number = menu.track_menu(
                     screen, clock, config,
+                    title="Choose A Lane",
                     max_number = track_data["total_holes"] + 1
                     )
                 track_path = os.path.join(config.TRACK_PATH, "track_{}".format(track_number))

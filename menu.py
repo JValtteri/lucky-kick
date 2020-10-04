@@ -115,8 +115,14 @@ def menu(screen, clock, config):
                 mouse_x, mouse_y = mouse.get_pos()
                 if start_button.rect.collidepoint((mouse_x, mouse_y)):
                     mode = 0
-                    track_number = track_menu(screen, clock, config)
-                    #hole_number = track_menu(screen, clock, config)
+                    track_number = track_menu(
+                        screen, clock, config,
+                        title="Choose A Track"
+                        )
+                    hole_number = track_menu(
+                        screen, clock, config,
+                        title="Choose A Lane"
+                        )
                     in_menu = False
 
                 elif exit_button.rect.collidepoint((mouse_x, mouse_y)):
@@ -137,7 +143,7 @@ def menu(screen, clock, config):
 
     return track_number, hole_number, mode
 
-def track_menu(screen, clock, config, max_number=10):
+def track_menu(screen, clock, config, title='', max_number=10):
     bacground = game_objects.Object(
         config.BACKGROUND,
         x=config.SCREEN_SIZE[0]/2,
@@ -167,15 +173,21 @@ def track_menu(screen, clock, config, max_number=10):
         config.HIGHLITE,
         colorkey=(163,73,164)
         )
+    title_text = game_objects.Texts(
+        config.RUBIK_FONT,
+        message=title,
+        size=40,
+        xy=( config.SCREEN_SIZE[0] / 2, 100 )
+        )
     font_size = 60
     buttons=[]
     for i in range(1, max_number+1):
         button = game_objects.Texts(
-            config.SC_FONT,
+            config.RUBIK_FONT,
             str(i),
-            size=font_size,
-            xy=(config.SCREEN_SIZE[0]/2+100-i%2*200, 100+(i-1)//2*100),
-            tag=i
+            size = font_size,
+            xy = (config.SCREEN_SIZE[0]/2+100-i%2*200, 200+(i-1)//2*100),
+            tag = i - 1
             )
         buttons.append(button)
     buttons.append(credit_button)
@@ -185,6 +197,7 @@ def track_menu(screen, clock, config, max_number=10):
         # DRAW
         bacground.draw(screen)
         track.draw(screen)
+        title_text.draw(screen)
         mouse_x, mouse_y = mouse.get_pos()
         for button in buttons:
             # HIGHLITE MOUSEOVER MENU ITEMS
@@ -272,11 +285,11 @@ def interm_screen(screen, config, throw_number, scores):
     bacground.scale(config.SCREEN_SIZE)
     bacground.draw(screen)
     # if len(scores) > 1:
-    throw_list = '-'.join(scores)
+    throw_list = ' | '.join(scores)
     final_score = sum([int(i) for i in scores])
     throw_history = game_objects.Texts(
         config.SC_FONT,
-        "{} = {}".format(throw_list, final_score),
+        "{} || {}".format(throw_list, final_score),
         size=60,
         color=config.UI_WHITE,
         xy=(config.SCREEN_SIZE[0] / 2, config.SCREEN_SIZE[1] / 2)
