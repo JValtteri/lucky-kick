@@ -30,6 +30,7 @@ class Config():
 
         self.HIGH_SCORE = 0
         self.CAMERA_SPEED = 6
+        self.VALID_TRACKS = 2
 
         # DISK PROPERTIES
         self.MAX_POWER = 5

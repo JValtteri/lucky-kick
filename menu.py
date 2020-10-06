@@ -124,7 +124,8 @@ def menu(screen, clock, config):
                     mode = 0
                     track_number = track_menu(
                         screen, clock, config,
-                        title="Choose A Track"
+                        title="Choose A Track",
+                        max_number=config.VALID_TRACKS
                         )
                     track_data = load_track(track_number, 0)
                     hole_number = track_menu(
