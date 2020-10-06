@@ -1,5 +1,5 @@
 # "Lucky-Kick" Frisbee-Golf
-A top down frisbee-golf game made with PyGame and Python3
+A top down frisbee-golf game made with **PyGame** and **Python3**
 
 ### 0.x BETA ###
 
