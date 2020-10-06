@@ -36,28 +36,41 @@ After each lane, you will a summary of the throws so far. Press **space** or **e
 | Turn  | +     |
 | Fade  | +++   |
 
+## Bugs ##
+
+**There are bugs**. The game is in its early ***BETA*** testing. All bugs are handled through ***issues*** and my head. 
+
+Feel free to post your findigs *in great details* in the ***Issues*** tab.
+
+**The Editor** is definately a ***at-your-own-risk*** kind of deal. It mostly does what is neaded, but all the latest fixes aren't in the *master* branch. I'll get there. I need *The Editor* more than you do, believe me!
+
+# The Editor #
+
 ## Editing and Adding New Tracks and Lanes
 
 The feature is implemented
 
 *add instructions here*
 
+# Project Overview #
+
 ## Features
-- Frisbee turn
-- Frisbee fade
-- hyzer / anhyzer
-- kicks from trees
-- Throw power
-- Level editor
-- Move Camera
-- Branches slow disk
+- Frisbee flight characteristics
+  - Frisbee turn
+  - Frisbee fade
+  - hyzer / anhyzer
+- Physics
+  - kicks from trees
+  - Throw power
+  - Branches slow disk
+- a basic Level Editor
+- Move Camera (WASD)
 - score cards
-- menu
+- main menu
 
 ## Planned Features ##
-
-A rough plan of what could be done.
-Subject to my whims.
+*A rough plan of what could be done.
+Subject to my whims.*
 
 ### First Wave ###
 - ~"Kicks" of trees and rocks.~
