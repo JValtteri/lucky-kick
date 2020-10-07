@@ -4,5 +4,5 @@ __*
 build/*
 *.spec
 high_score
-aird-venv/*
+*venv/*
 *copy
